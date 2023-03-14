@@ -41,13 +41,13 @@ export class FileEditorComponent implements OnInit {
       this.config = {
         document: {
           "fileType": "docx",
-          "key": "Khirz6zTPdfd7",
+          "key": `${this.node?.uuid}`,
           "title": `${docName}`,
-          "url": `${environment.BACKEND_BASE_URL}/node/${this.node?.uuid}/content`
+          "url": `${environment.BACKEND_BASE_URL}/integration/onlyoffice/document/${this.node?.uuid}/contents`
         },
         documentType: "word",
         editorConfig: {
-          "callbackUrl": "https://trodix.local/url-to-callback.ashx"
+          "callbackUrl": `${environment.BACKEND_BASE_URL}/integration/onlyoffice/document`
         },
       }
 
