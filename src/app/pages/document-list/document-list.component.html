@@ -1,0 +1,13 @@
+<div class="document-list">
+    <h1>List des documents</h1>
+    <ul>
+        <li *ngFor="let node of nodeList$ | async" class="file-row">
+            <div *ngFor="let prop of node.properties | keyvalue">
+                <div *ngIf="prop.key == 'cm:name'">{{prop.value}}</div>
+            </div>
+            <div>
+                <button (click)="edit(node)">Edit</button>
+            </div>
+        </li>
+    </ul>
+</div>

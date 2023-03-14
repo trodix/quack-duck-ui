@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  BACKEND_BASE_URL: 'http://trodix.local:8010',
+  ONLYOFFICE_BASE_URL: 'http://trodix.local:6080'
 };
 
 /*

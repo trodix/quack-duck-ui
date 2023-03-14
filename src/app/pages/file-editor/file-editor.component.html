@@ -1,0 +1,10 @@
+<div class="file-editor" *ngIf="config">
+    
+    <document-editor 
+        id="docxForComments" 
+        [documentServerUrl]="ONLYOFFICE_BASE_URL"
+        [config]="config"
+        [events_onDocumentReady]="onDocumentReady"
+        ></document-editor>
+
+</div>
