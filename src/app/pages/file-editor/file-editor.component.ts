@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IConfig } from '@onlyoffice/document-editor-angular';
-import { map } from 'rxjs';
-import { DNode, Property } from 'src/app/model/node';
+import { DNode } from 'src/app/model/node';
 import { DocumentService } from 'src/app/service/document.service';
 import { environment } from 'src/environments/environment';
 
@@ -13,46 +12,45 @@ import { environment } from 'src/environments/environment';
 })
 export class FileEditorComponent implements OnInit {
 
-  node: DNode | null = null;
+  node!: DNode;
 
-  config: IConfig | null = null;
+  config!: IConfig;
 
-  get ONLYOFFICE_BASE_URL() {
-    return environment.ONLYOFFICE_BASE_URL
-  }
-
-  constructor(private aroute: ActivatedRoute, private route: Router, private documentService: DocumentService) { }
+  constructor(private aroute: ActivatedRoute, private route: Router, private documentService: DocumentService) {}
 
   ngOnInit(): void {
 
-    this.aroute.paramMap.pipe(map(() => window.history.state)).subscribe(node => {
-      this.node = node;
+    const raw = localStorage.getItem("onlyoffice_opened_node");
+    if (raw == null) {
+      return;
+    }
 
-      if (this.node?.uuid == null || this.node?.properties == null) {
-        this.route.navigateByUrl('');
-      }
+    this.node = JSON.parse(raw);
 
-      console.log("document found:")
-      console.log(this.node);
-      console.log(typeof this.node?.properties);
-      const docName = JSON.stringify(this.node?.properties).split(',').find(a => a.includes('cm:name'))?.split(':').reverse()[0].replace('"', "").replace('"', "");
-      console.log(docName);
+    if (this.node.uuid == null || this.node.properties == null) {
+      window.close();
+    }
 
-      this.config = {
-        document: {
-          "fileType": "docx",
-          "key": `${this.node?.uuid}`,
-          "title": `${docName}`,
-          "url": `${environment.BACKEND_BASE_URL}/integration/onlyoffice/document/${this.node?.uuid}/contents`
-        },
-        documentType: "word",
-        editorConfig: {
-          "callbackUrl": `${environment.BACKEND_BASE_URL}/integration/onlyoffice/document`
-        },
-      }
+    const docName = this.documentService.getDocumentName(this.node);
 
-    });
+    this.config = {
+      document: {
+        "fileType": this.documentService.getOnlyOfficeFileType(this.node),
+        // TODO [key] uuid must be different for each modification of the document https://api.onlyoffice.com/editors/troubleshooting#key
+        "key": `${this.node?.uuid}`,
+        "title": `${docName}`,
+        "url": `${environment.BACKEND_BASE_URL}/integration/onlyoffice/document/${this.node?.uuid}/contents`
+      },
+      documentType: this.documentService.getOnlyOfficeDocumentType(this.node),
+      editorConfig: {
+        "callbackUrl": `${environment.BACKEND_BASE_URL}/integration/onlyoffice/document`
+      },
+    }
 
+  }
+
+  get ONLYOFFICE_BASE_URL() {
+    return environment.ONLYOFFICE_BASE_URL
   }
 
   onDocumentReady(): void {

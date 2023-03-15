@@ -11,17 +11,21 @@ import { DocumentService } from 'src/app/service/document.service';
 })
 export class DocumentListComponent implements OnInit {
 
-  nodeList$: Observable<DNode[]> = new Observable();
+  nodeList$!: Observable<DNode[]>;
 
-  constructor(private documentService: DocumentService, private route: Router) {}
+  constructor(private documentService: DocumentService, private route: Router) { }
 
   ngOnInit(): void {
     this.nodeList$ = this.documentService.getNodesForPath('/fruits');
   }
 
   edit(node: DNode) {
-    console.log("edit node: " + node.uuid);
-    this.route.navigateByUrl(`/edit/${node.uuid}`, {state: node});
+    localStorage.setItem("onlyoffice_opened_node", JSON.stringify(node));
+    window.open(`${window.location.origin}/edit/${node.uuid}`, '_blank', 'noreferrer');
+  }
+
+  isOnlyOfficeSupported(node: DNode) {
+    return this.documentService.isSupportedByOnlyOffice(node);
   }
 
 }

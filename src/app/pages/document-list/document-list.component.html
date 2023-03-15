@@ -6,7 +6,7 @@
                 <div *ngIf="prop.key == 'cm:name'">{{prop.value}}</div>
             </div>
             <div>
-                <button (click)="edit(node)">Edit</button>
+                <button *ngIf="isOnlyOfficeSupported(node)" (click)="edit(node)">Open in OnlyOffice</button>
             </div>
         </li>
     </ul>
