@@ -7,6 +7,12 @@ import { FileEditorComponent } from 'src/app/pages/file-editor/file-editor.compo
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DocumentEditorModule } from "@onlyoffice/document-editor-angular";
+import {TableModule} from 'primeng/table';
+import {DialogModule} from 'primeng/dialog';
+import {ButtonModule} from 'primeng/button';
+import {MenuModule} from 'primeng/menu';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
 
 @NgModule({
   declarations: [
@@ -18,7 +24,13 @@ import { DocumentEditorModule } from "@onlyoffice/document-editor-angular";
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    DocumentEditorModule
+    DocumentEditorModule,
+    TableModule,
+    DialogModule,
+    ButtonModule,
+    MenuModule,
+    BrowserAnimationsModule,
+    BreadcrumbModule
   ],
   providers: [],
   bootstrap: [AppComponent]

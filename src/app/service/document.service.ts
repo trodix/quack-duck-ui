@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DNode } from 'src/app/model/node';
+import { ContentModel, DNode } from 'src/app/model/node';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -58,6 +58,14 @@ export class DocumentService {
 
   isSupportedByOnlyOffice(node: DNode): boolean {
     return this.getOnlyOfficeDocumentType(node) != "";
+  }
+
+  isNodeTypeContent(node: DNode): boolean {
+    return node.type === ContentModel.TYPE_CONTENT;
+  }
+
+  isNodeTypeDirectory(node: DNode): boolean {
+    return node.type === ContentModel.TYPE_DIRECTORY;
   }
 
 }

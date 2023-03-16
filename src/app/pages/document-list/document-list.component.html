@@ -1,13 +1,30 @@
 <div class="document-list">
-    <h1>List des documents</h1>
-    <ul>
-        <li *ngFor="let node of nodeList$ | async" class="file-row">
-            <div *ngFor="let prop of node.properties | keyvalue">
-                <div *ngIf="prop.key == 'cm:name'">{{prop.value}}</div>
-            </div>
-            <div>
-                <button *ngIf="isOnlyOfficeSupported(node)" (click)="edit(node)">Open in OnlyOffice</button>
-            </div>
-        </li>
-    </ul>
+    <h1>File explorer</h1>
+
+    <p-breadcrumb [model]="pathList" [home]="home"></p-breadcrumb>
+
+    <div class="card document-list-container">
+        <p-table [value]="(nodeList$ | async)!" dataKey="uuid" [tableStyle]="{'min-width': '50rem'}">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Filename</th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-node>
+                <tr [pContextMenuRow]="node">
+                    <td class="col-filename" (click)="onNodeSelected(node)">
+                        <img src="{{getIcon(node)}}" alt="file icon" height="32px">
+                        <span>{{ node.properties['cm:name'] }}</span>
+                    </td>
+                    <td>
+                        <a (click)="onClickMenu(menu, $event, node)" class="toogle-menu">...</a>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <p-menu #menu [popup]="true" [model]="items"></p-menu>
+
 </div>

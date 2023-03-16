@@ -12,3 +12,8 @@ export interface Property {
   key: string, 
   value: string 
 }
+
+export const ContentModel = {
+  TYPE_CONTENT: "cm:content",
+  TYPE_DIRECTORY: "cm:directory"
+}

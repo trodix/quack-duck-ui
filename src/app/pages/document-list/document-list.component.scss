@@ -1,4 +1,34 @@
-.file-row {
+ul {
+    list-style-type: none;
+}
+
+.document-list {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    align-items: center;
+
+    .document-list-container {
+        width: 100%;
+
+        .col-filename {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            cursor: pointer;
+
+            img {
+                margin: 0 8px;
+                height: 24px;
+            }
+        }
+
+        .toogle-menu {
+            cursor: pointer;
+            padding: 8px;
+        }
+    }
+}
+
+p-breadcrumb {
+    margin: 16px 0;
 }
