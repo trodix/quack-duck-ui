@@ -3,6 +3,17 @@
 
     <p-breadcrumb [model]="pathList" [home]="home"></p-breadcrumb>
 
+    <p-toolbar>
+        <div class="p-toolbar-group-start">
+            <p-button label="New" icon="pi pi-folder" (onClick)="showDialogCreateDirectory()"></p-button>            
+            <p-button label="Upload" icon="pi pi-upload" styleClass="p-button-success" (onClick)="showDialogUploadFile()"></p-button>
+        </div>
+    
+        <div class="p-toolbar-group-end">
+            <p-button icon="pi pi-search"></p-button>
+        </div>
+    </p-toolbar>
+
     <div class="card document-list-container">
         <p-table [value]="(nodeList$ | async)!" dataKey="uuid" [tableStyle]="{'min-width': '50rem'}">
             <ng-template pTemplate="header">
@@ -26,5 +37,26 @@
     </div>
 
     <p-menu #menu [popup]="true" [model]="items"></p-menu>
+
+    <p-dialog *ngIf="createDirectoryForm" header="Create a new directory" [(visible)]="displayModalCreateDirectory" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">
+        <form [formGroup]="createDirectoryForm" (ngSubmit)="createDirectory()" class="w-full">
+            <h3>Location {{currentPath}}</h3>
+            <div class="flex flex-column">
+                <div class="form-fields flex flex-column">
+                    <div class="field flex flex-column">
+                        <input type="text" pInputText formControlName="newDirectoryName"/>
+                        <small class="p-error" *ngIf="createDirectoryForm.get('newDirectoryName')?.invalid && createDirectoryForm.get('newDirectoryName')?.dirty ">Directory name is invalid</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions flex justify-content-end gap-2">
+                <div class="right flex align-items-end gap-2">
+                    <button pButton type="button" label="Cancel" class="p-button-secondary" icon="pi pi-times" (click)="displayModalCreateDirectory = false"></button>
+                    <button pButton type="submit" label="Create" class="p-button-primary" icon="pi pi-save" [disabled]="createDirectoryForm.invalid"></button>
+                </div>
+            </div>
+        </form>
+    </p-dialog>
 
 </div>

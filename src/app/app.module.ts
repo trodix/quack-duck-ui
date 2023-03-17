@@ -13,12 +13,20 @@ import {ButtonModule} from 'primeng/button';
 import {MenuModule} from 'primeng/menu';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
+import {ToolbarModule} from 'primeng/toolbar';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { HeaderComponent } from './components/header/header.component';
+import {InputTextModule} from 'primeng/inputtext';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     DocumentListComponent,
-    FileEditorComponent
+    FileEditorComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
@@ -30,9 +38,15 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
     ButtonModule,
     MenuModule,
     BrowserAnimationsModule,
-    BreadcrumbModule
+    BreadcrumbModule,
+    ToolbarModule,
+    ReactiveFormsModule,
+    ToastModule,
+    InputTextModule
   ],
-  providers: [],
+  providers: [
+    MessageService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ContentModel, DNode } from 'src/app/model/node';
+import { ContentModel, DNode, DNodeDirRequest } from 'src/app/model/node';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -66,6 +66,15 @@ export class DocumentService {
 
   isNodeTypeDirectory(node: DNode): boolean {
     return node.type === ContentModel.TYPE_DIRECTORY;
+  }
+
+  createDirectory(path: string, name: string): Observable<DNode> {
+
+    const formData = new FormData();
+    formData.set("directoryPath", path);
+    formData.set("properties['cm:name']", name);
+    
+    return this.http.post<DNode>(`${environment.BACKEND_BASE_URL}/directory`, formData);
   }
 
 }

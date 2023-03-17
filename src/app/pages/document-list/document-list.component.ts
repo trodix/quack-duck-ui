@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MenuItem, MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
 import { DNode } from 'src/app/model/node';
 import { DocumentService } from 'src/app/service/document.service';
@@ -18,11 +19,15 @@ export class DocumentListComponent implements OnInit {
   pathList!: MenuItem[];
 
   home!: MenuItem;
+
+  createDirectoryForm!: FormGroup;
+
+  displayModalCreateDirectory: boolean = false;
   
   @Input()
   currentPath: string = "/";
   
-  constructor(private documentService: DocumentService) { }
+  constructor(private messageService: MessageService, private documentService: DocumentService) { }
   
   ngOnInit(): void {
     this.loadDirectory("/");
@@ -150,6 +155,33 @@ export class DocumentListComponent implements OnInit {
 
   isNodeTypeDirectory(node: DNode): boolean {
     return this.documentService.isNodeTypeDirectory(node);
+  }
+
+  showDialogCreateDirectory(): void {
+    this.createDirectoryForm = new FormGroup({
+      newDirectoryName: new FormControl("", Validators.required),
+    });
+
+    this.displayModalCreateDirectory = true;
+  }
+
+  createDirectory(): void {
+    const newDirectoryName = this.createDirectoryForm.get('newDirectoryName')?.value
+
+    this.documentService.createDirectory(this.currentPath, newDirectoryName).subscribe({ 
+      complete: () => {
+        this.displayModalCreateDirectory = false;
+        this.createDirectoryForm.reset();
+        this.loadDirectory(this.currentPath);
+      }, 
+      error: (error: Error) => {
+        this.messageService.add({ severity: 'error', summary: 'Error while creating the directory. Please try again later.', detail: error.message });
+      }
+    });
+  }
+
+  showDialogUploadFile(): void {
+    console.log("Upload File")
   }
 
 }

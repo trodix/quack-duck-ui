@@ -8,6 +8,12 @@ export interface DNode {
   properties: Property[];
 }
 
+export interface DNodeDirRequest {
+  directoryPath: string;
+  bucket?: string;
+  properties: any[];
+}
+
 export interface Property {
   key: string, 
   value: string 

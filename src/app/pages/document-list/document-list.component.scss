@@ -32,3 +32,11 @@ ul {
 p-breadcrumb {
     margin: 16px 0;
 }
+
+p-toolbar {
+    width: 100%;
+
+    p-button {
+        margin: 0 8px;
+    }
+}
