@@ -180,8 +180,20 @@ export class DocumentListComponent implements OnInit {
     });
   }
 
-  showDialogUploadFile(): void {
-    console.log("Upload File")
+  onSelectedFile(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const files = target.files as FileList;
+    if (files.length > 0) {
+      const selectedFile = files[0];
+      this.documentService.uploadFile(this.currentPath, selectedFile).subscribe({ 
+        complete: () => {
+          this.loadDirectory(this.currentPath);
+        }, 
+        error: (error: Error) => {
+          this.messageService.add({ severity: 'error', summary: 'Error while uploading the file. Please try again later.', detail: error.message });
+        }
+      });
+    }
   }
 
 }

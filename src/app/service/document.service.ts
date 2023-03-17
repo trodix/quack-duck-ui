@@ -20,7 +20,7 @@ export class DocumentService {
   }
 
   getDocumentName(node: DNode): string {
-    return JSON.stringify(node.properties).split(',').find(a => a.includes('cm:name'))?.split(':').reverse()[0].replace('"', "").replace('"', "") || "";
+    return node.properties["cm:name"];
   }
 
   getOnlyOfficeDocumentType(node: DNode): string {
@@ -75,6 +75,17 @@ export class DocumentService {
     formData.set("properties['cm:name']", name);
     
     return this.http.post<DNode>(`${environment.BACKEND_BASE_URL}/directory`, formData);
+  }
+
+  uploadFile(path: string, file: File): Observable<DNode> {
+
+    const formData = new FormData();
+    formData.set("file", file);
+    formData.set("type", file.type);
+    formData.set("directoryPath", path);
+    formData.set("properties['cm:name']", file.name);
+
+    return this.http.post<DNode>(`${environment.BACKEND_BASE_URL}/upload`, formData);
   }
 
 }
