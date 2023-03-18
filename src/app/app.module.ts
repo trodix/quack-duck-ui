@@ -19,6 +19,7 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { HeaderComponent } from './components/header/header.component';
 import {InputTextModule} from 'primeng/inputtext';
+import { AuthConfigModule } from '../config/auth.config.module';
 
 
 @NgModule({
@@ -42,7 +43,8 @@ import {InputTextModule} from 'primeng/inputtext';
     ToolbarModule,
     ReactiveFormsModule,
     ToastModule,
-    InputTextModule
+    InputTextModule,
+    AuthConfigModule
   ],
   providers: [
     MessageService

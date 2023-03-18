@@ -1,1 +1,15 @@
-
+<div class="header">
+    <div>
+        <h1><a [routerLink]="['/']">PDFsign</a></h1>
+    </div>
+    <div class="action">
+        <nav>
+            <ul>
+                <li class="user"><span class="pi pi-user"></span>{{email}}</li>
+                <li>
+                    <button pButton type="button" label="Logout" class="p-button-danger" icon="pi pi-power-off" (click)="logout()"></button>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
