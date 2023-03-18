@@ -1,6 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
+import { UserProfile } from 'src/app/model/userprofile';
 
 @Component({
   selector: 'app-header',
@@ -11,7 +12,10 @@ export class HeaderComponent implements OnInit {
 
   constructor(private readonly oauthService: OAuthService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    const userprofile = ((await this.oauthService.loadUserProfile()) as any).info as UserProfile;
+    console.log(userprofile);
+    console.log(this.oauthService.getIdToken())
   }
 
   public get email() {

@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IConfig } from '@onlyoffice/document-editor-angular';
+import { OAuthService } from 'angular-oauth2-oidc';
 import { DNode } from 'src/app/model/node';
+import { UserProfile } from 'src/app/model/userprofile';
 import { DocumentService } from 'src/app/service/document.service';
+import { AuthConfigService } from 'src/config/auth-config.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -16,9 +19,9 @@ export class FileEditorComponent implements OnInit {
 
   config!: IConfig;
 
-  constructor(private aroute: ActivatedRoute, private route: Router, private documentService: DocumentService) {}
+  constructor(private oauthService: OAuthService, private route: Router, private documentService: DocumentService) {}
 
-  ngOnInit(): void {
+  async ngOnInit() {
 
     const raw = localStorage.getItem("onlyoffice_opened_node");
     if (raw == null) {
@@ -32,6 +35,7 @@ export class FileEditorComponent implements OnInit {
     }
 
     const docName = this.documentService.getDocumentName(this.node);
+    const userprofile = ((await this.oauthService.loadUserProfile()) as any).info as UserProfile;
 
     this.config = {
       document: {
@@ -43,7 +47,12 @@ export class FileEditorComponent implements OnInit {
       },
       documentType: this.documentService.getOnlyOfficeDocumentType(this.node),
       editorConfig: {
-        "callbackUrl": `${environment.BACKEND_BASE_URL}/integration/onlyoffice/document`
+        "callbackUrl": `${environment.BACKEND_BASE_URL}/integration/onlyoffice/document`,
+        lang: window.navigator.language,
+        user: {
+          id: userprofile.sub,
+          name: userprofile.name,
+        }
       },
     }
 
