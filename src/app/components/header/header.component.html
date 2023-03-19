@@ -6,7 +6,11 @@
         <nav>
             <ul>
                 <li>
-                    <a (click)="onClickMenu(menu, $event)" class="toogle-menu">{{email}}<i class="pi pi-angle-down ml-2"></i></a>
+                    <a (click)="onClickMenu(menu, $event)" class="toogle-menu">
+                        <i class="pi pi-user mr-2"></i>
+                        <span>{{email}}</span>
+                        <i class="pi pi-angle-down ml-2"></i>
+                    </a>
                     <p-menu #menu [popup]="true" [model]="items"></p-menu>
                 </li>
             </ul>
