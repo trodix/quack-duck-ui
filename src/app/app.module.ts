@@ -20,6 +20,7 @@ import { ToastModule } from 'primeng/toast';
 import { HeaderComponent } from './components/header/header.component';
 import {InputTextModule} from 'primeng/inputtext';
 import { AuthConfigModule } from '../config/auth.config.module';
+import { DropdownComponent } from './components/dropdown/dropdown.component';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { AuthConfigModule } from '../config/auth.config.module';
     AppComponent,
     DocumentListComponent,
     FileEditorComponent,
-    HeaderComponent
+    HeaderComponent,
+    DropdownComponent
   ],
   imports: [
     BrowserModule,

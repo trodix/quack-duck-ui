@@ -1,6 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
+import { Item } from 'src/app/components/dropdown/dropdown.component';
 import { UserProfile } from 'src/app/model/userprofile';
 
 @Component({
@@ -27,5 +28,16 @@ export class HeaderComponent implements OnInit {
   logout() {
     this.oauthService.logOut();
   }
+
+  // public get menuItems(): Item[] {
+  //   return [
+  //     {
+  //       label: "Logout",
+  //       styleClass: "p-button-text p-button-danger",
+  //       classIcons: "pi pi-power-off",
+  //       action: this.logout
+  //     }
+  //   ]
+  // }
 
 }

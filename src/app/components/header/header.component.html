@@ -1,12 +1,18 @@
 <div class="header">
     <div>
-        <h1><a [routerLink]="['/']">PDFsign</a></h1>
+        <h1><a [routerLink]="['/']">Ducky Drive</a></h1>
     </div>
     <div class="action">
         <nav>
             <ul>
-                <li class="user"><span class="pi pi-user"></span>{{email}}</li>
                 <li>
+                    <div *ngIf="email">
+                        <i class="pi pi-user mr-2"></i>
+                        <span>{{email}}</span>
+                    </div>
+                </li>
+                <li>
+                    <!-- <app-dropdown [label]="email" styleClass="pi pi-user" [list]="menuItems"></app-dropdown> -->
                     <button pButton type="button" label="Logout" class="p-button-danger" icon="pi pi-power-off" (click)="logout()"></button>
                 </li>
             </ul>
