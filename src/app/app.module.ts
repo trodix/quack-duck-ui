@@ -20,6 +20,7 @@ import { AuthConfigModule } from '../config/auth.config.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
+import { PropertyPipe } from './pipes/property.pipe';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { HeaderComponent } from './components/header/header.component';
     AppComponent,
     DocumentListComponent,
     FileEditorComponent,
-    HeaderComponent
+    HeaderComponent,
+    PropertyPipe
   ],
   imports: [
     BrowserModule,

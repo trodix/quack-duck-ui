@@ -29,10 +29,10 @@
                 <tr [pContextMenuRow]="node">
                     <td class="col-filename" (click)="onNodeSelected(node)">
                         <img src="{{getIcon(node)}}" alt="file icon">
-                        <span>{{ node.properties['cm:name'] }}</span>
+                        <span>{{ node.properties | property: 'cm:name' }}</span>
                     </td>
-                    <td>{{ node.properties['cm:creator-name'] || "System" }}</td>
-                    <td>{{ node.properties['cm:created-at'] | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+                    <td>{{ node.properties | property: 'cm:creator-name' || "System" }}</td>
+                    <td>{{ node.properties | property: 'cm:created-at' | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
                     <td class="col-actions">
                         <a (click)="onClickMenu(menu, $event, node)" class="toogle-menu">...</a>
                     </td>
@@ -59,6 +59,26 @@
                 <div class="right flex align-items-end gap-2">
                     <button pButton type="button" label="Cancel" class="p-button-secondary" icon="pi pi-times" (click)="displayModalCreateDirectory = false"></button>
                     <button pButton type="submit" label="Create" class="p-button-primary" icon="pi pi-save" [disabled]="createDirectoryForm.invalid"></button>
+                </div>
+            </div>
+        </form>
+    </p-dialog>
+
+    <p-dialog *ngIf="renameForm" header="Rename" [(visible)]="displayModalRename" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">
+        <form [formGroup]="renameForm" (ngSubmit)="rename()" class="w-full">
+            <div class="flex flex-column">
+                <div class="form-fields flex flex-column">
+                    <div class="field flex flex-column">
+                        <input type="text" pInputText formControlName="newNodeName"/>
+                        <small class="p-error" *ngIf="renameForm.get('newNodeName')?.invalid && renameForm.get('newNodeName')?.dirty ">Name is invalid</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions flex justify-content-end gap-2">
+                <div class="right flex align-items-end gap-2">
+                    <button pButton type="button" label="Cancel" class="p-button-secondary" icon="pi pi-times" (click)="closeDialogRename()"></button>
+                    <button pButton type="submit" label="Rename" class="p-button-primary" icon="pi pi-save" [disabled]="renameForm.invalid"></button>
                 </div>
             </div>
         </form>

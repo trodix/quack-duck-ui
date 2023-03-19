@@ -22,7 +22,13 @@ export class DocumentListComponent implements OnInit {
 
   createDirectoryForm!: FormGroup;
 
+  renameForm!: FormGroup;
+
   displayModalCreateDirectory: boolean = false;
+
+  displayModalRename: boolean = false;
+
+  selectedNode: DNode | null = null;
   
   @Input()
   currentPath: string = "/";
@@ -70,7 +76,7 @@ export class DocumentListComponent implements OnInit {
             label: 'Rename',
             icon: 'pi pi-refresh',
             command: () => {
-              console.log("rename")
+              this.showDialogRename(node);
             }
           },
           {
@@ -106,7 +112,7 @@ export class DocumentListComponent implements OnInit {
 
   onNodeSelected(node: DNode): void {
     if (this.isNodeTypeDirectory(node)) {
-      let requestedPath = ("/" + this.pathList.map(i => i.label).join('/') + "/" + node.properties['cm:name']);
+      let requestedPath = ("/" + this.pathList.map(i => i.label).join('/') + "/" + this.documentService.getDocumentName(node));
       if (requestedPath.startsWith("//")) {
         requestedPath = requestedPath.slice(1);
       }
@@ -119,7 +125,7 @@ export class DocumentListComponent implements OnInit {
     if (this.isNodeTypeContent(node)) {
       switch(this.documentService.getOnlyOfficeDocumentType(node)) {
         case "word":
-          if (node.properties['cm:name'].endsWith('.pdf')) {
+          if (this.documentService.getDocumentName(node).endsWith('.pdf')) {
             return "/assets/img/office/pdf-icon.svg";
           } else {
             return "/assets/img/office/word-icon.svg";
@@ -206,6 +212,44 @@ export class DocumentListComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: `Error while deleting the ${nodeType}. Please try again later.`, detail: error.message });
       }
     });
+  }
+
+  showDialogRename(node: DNode): void {
+    this.renameForm = new FormGroup({
+      newNodeName: new FormControl(this.documentService.getDocumentName(node), Validators.required),
+    });
+
+    this.selectedNode = node;
+    this.displayModalRename = true;
+  }
+
+  closeDialogRename() {
+    this.displayModalRename = false;
+    this.selectedNode = null;
+  }
+
+  rename(): void {
+    if (this.selectedNode) {
+      const newName = this.renameForm.get("newNodeName")?.value;
+      const updateNodeData = { ...this.selectedNode };
+      updateNodeData.properties = [
+        {
+          key: "cm:name",
+          value: newName
+        }
+      ]
+      this.documentService.update(updateNodeData).subscribe({ 
+        complete: () => {
+          this.loadDirectory(this.currentPath);
+          this.closeDialogRename();
+        }, 
+        error: (error: Error) => {
+          const nodeType = updateNodeData.type == ContentModel.TYPE_DIRECTORY ? "directory" : "document";
+          this.messageService.add({ severity: 'error', summary: `Error while updating the ${nodeType}. Please try again later.`, detail: error.message });
+        }
+      });
+    }
+    
   }
 
 }

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { ContentModel, DNode, DNodeDirRequest } from 'src/app/model/node';
+import { map, Observable } from 'rxjs';
+import { ContentModel, DNode, Property } from 'src/app/model/node';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -11,8 +11,36 @@ export class DocumentService {
 
   constructor(private http: HttpClient) { }
 
+  private transformNodeListProperties(input: Observable<DNode[]>): Observable<DNode[]> {
+    return input.pipe(
+      map(nodes => {
+        return nodes.map(node => {
+          const props: Property[] = [];
+          for (let key in node.properties) {
+            props.push({ key: key, value: (node.properties[key] as any as string) });
+          }
+          node.properties = props;
+          return node;
+        });
+      })
+    );
+  }
+
+  private transformNodeProperties(input: Observable<DNode>): Observable<DNode> {
+    return input.pipe(
+      map(node => {
+        const props: Property[] = [];
+        for (let key in node.properties) {
+          props.push({ key: key, value: (node.properties[key] as any as string) });
+        }
+        node.properties = props;
+        return node;
+      })
+    );
+  }
+
   getNodesForPath(path: string): Observable<DNode[]> {
-    return this.http.get<DNode[]>(`${environment.BACKEND_BASE_URL}/node?path=${path}`);
+    return this.transformNodeListProperties(this.http.get<DNode[]>(`${environment.BACKEND_BASE_URL}/node?path=${path}`));
   }
 
   getFileByNodeId(nodeId: string): Observable<Blob> {
@@ -20,7 +48,7 @@ export class DocumentService {
   }
 
   getDocumentName(node: DNode): string {
-    return node.properties["cm:name"];
+    return node.properties.find(prop => prop.key === "cm:name")?.value || "";
   }
 
   getOnlyOfficeDocumentType(node: DNode): string {
@@ -74,7 +102,7 @@ export class DocumentService {
     formData.set("directoryPath", path);
     formData.set("properties['cm:name']", name);
     
-    return this.http.post<DNode>(`${environment.BACKEND_BASE_URL}/directory`, formData);
+    return this.transformNodeProperties(this.http.post<DNode>(`${environment.BACKEND_BASE_URL}/directory`, formData));
   }
 
   uploadFile(path: string, file: File): Observable<DNode> {
@@ -85,11 +113,39 @@ export class DocumentService {
     formData.set("directoryPath", path);
     formData.set("properties['cm:name']", file.name);
 
-    return this.http.post<DNode>(`${environment.BACKEND_BASE_URL}/upload`, formData);
+    return this.transformNodeProperties(this.http.post<DNode>(`${environment.BACKEND_BASE_URL}/upload`, formData));
   }
 
   delete(node: DNode): Observable<any> {
     return this.http.delete(`${environment.BACKEND_BASE_URL}/node/${node.uuid}`);
+  }
+
+  update(node: DNode): Observable<DNode> {
+    const formData = new FormData();
+    formData.set("nodeId", node.uuid);
+    formData.set("bucket", node.bucket);
+    formData.set("type", node.type);
+    formData.set("directoryPath", node.directoryPath);
+    formData.set("versions", String(node.versions));
+    formData.set("aspects", node.aspects.join(","));
+    node.properties.forEach(property => {
+      formData.set(`properties['${property.key}']`, property.value);
+    });
+    
+    return this.transformNodeProperties(this.http.put<DNode>(`${environment.BACKEND_BASE_URL}/node`, formData));
+  }
+
+  getProperty(node: DNode, prop: string): string | null {
+    node.properties.forEach((property, key) => {
+      console.log(`properties['${key}']`, property.value);
+    });
+
+    for (let key in node.properties) {
+      if (prop == key) {
+        return node.properties[prop];
+      }
+    }
+    return null;
   }
 
 }
