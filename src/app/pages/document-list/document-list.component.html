@@ -16,20 +16,24 @@
     </p-toolbar>
 
     <div class="card document-list-container">
-        <p-table [value]="(nodeList$ | async)!" dataKey="uuid" [tableStyle]="{'min-width': '50rem'}">
+        <p-table [value]="(nodeList$ | async)!" dataKey="uuid" [scrollable]="true" scrollHeight="600px" [tableStyle]="{'min-width': '50rem'}">
             <ng-template pTemplate="header">
                 <tr>
-                    <th>Filename</th>
+                    <th pSortableColumn="filename">Filename <p-sortIcon field="filename"></p-sortIcon></th>
+                    <th pSortableColumn="creator">Creator <p-sortIcon field="creator"></p-sortIcon></th>
+                    <th pSortableColumn="createdAt">Created at <p-sortIcon field="createdAt"></p-sortIcon></th>
                     <th>Actions</th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-node>
                 <tr [pContextMenuRow]="node">
                     <td class="col-filename" (click)="onNodeSelected(node)">
-                        <img src="{{getIcon(node)}}" alt="file icon" height="32px">
+                        <img src="{{getIcon(node)}}" alt="file icon">
                         <span>{{ node.properties['cm:name'] }}</span>
                     </td>
-                    <td>
+                    <td>{{ node.properties['cm:creator-name'] || "System" }}</td>
+                    <td>{{ node.properties['cm:created-at'] | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+                    <td class="col-actions">
                         <a (click)="onClickMenu(menu, $event, node)" class="toogle-menu">...</a>
                     </td>
                 </tr>

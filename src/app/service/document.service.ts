@@ -88,4 +88,8 @@ export class DocumentService {
     return this.http.post<DNode>(`${environment.BACKEND_BASE_URL}/upload`, formData);
   }
 
+  delete(node: DNode): Observable<any> {
+    return this.http.delete(`${environment.BACKEND_BASE_URL}/node/${node.uuid}`);
+  }
+
 }

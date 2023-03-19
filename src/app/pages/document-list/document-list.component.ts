@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MenuItem, MessageService } from 'primeng/api';
+import { MenuItem, MessageService, SortEvent } from 'primeng/api';
 import { Observable } from 'rxjs';
-import { DNode } from 'src/app/model/node';
+import { ContentModel, DNode } from 'src/app/model/node';
 import { DocumentService } from 'src/app/service/document.service';
 
 @Component({
@@ -77,7 +77,7 @@ export class DocumentListComponent implements OnInit {
             label: 'Delete',
             icon: 'pi pi-times',
             command: () => {
-              console.log("delete")
+              this.delete(node);
             }
           }
         ]
@@ -194,6 +194,18 @@ export class DocumentListComponent implements OnInit {
         }
       });
     }
+  }
+
+  delete(node: DNode): void {
+    this.documentService.delete(node).subscribe({ 
+      complete: () => {
+        this.loadDirectory(this.currentPath);
+      }, 
+      error: (error: Error) => {
+        const nodeType = node.type == ContentModel.TYPE_DIRECTORY ? "directory" : "document";
+        this.messageService.add({ severity: 'error', summary: `Error while deleting the ${nodeType}. Please try again later.`, detail: error.message });
+      }
+    });
   }
 
 }
