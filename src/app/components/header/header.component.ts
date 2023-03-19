@@ -1,7 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { Item } from 'src/app/components/dropdown/dropdown.component';
+import { MenuItem } from 'primeng/api';
 import { UserProfile } from 'src/app/model/userprofile';
 
 @Component({
@@ -10,6 +10,8 @@ import { UserProfile } from 'src/app/model/userprofile';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+
+  items!: MenuItem[];
 
   constructor(private readonly oauthService: OAuthService) { }
 
@@ -29,15 +31,25 @@ export class HeaderComponent implements OnInit {
     this.oauthService.logOut();
   }
 
-  // public get menuItems(): Item[] {
-  //   return [
-  //     {
-  //       label: "Logout",
-  //       styleClass: "p-button-text p-button-danger",
-  //       classIcons: "pi pi-power-off",
-  //       action: this.logout
-  //     }
-  //   ]
-  // }
+  onClickMenu(menu: any, event: any): void {
+    this.items = [
+      {
+        id: "common",
+        label: `Account`,
+        items: [
+          {
+            label: 'Logout',
+            icon: 'pi pi-power-off',
+            styleClass: 'menu-text-color-danger',
+            command: () => {
+              this.logout();
+            }
+          }
+        ]
+      }
+    ];
+
+    menu.toggle(event);
+  }
 
 }

@@ -6,14 +6,8 @@
         <nav>
             <ul>
                 <li>
-                    <div *ngIf="email">
-                        <i class="pi pi-user mr-2"></i>
-                        <span>{{email}}</span>
-                    </div>
-                </li>
-                <li>
-                    <!-- <app-dropdown [label]="email" styleClass="pi pi-user" [list]="menuItems"></app-dropdown> -->
-                    <button pButton type="button" label="Logout" class="p-button-danger" icon="pi pi-power-off" (click)="logout()"></button>
+                    <a (click)="onClickMenu(menu, $event)" class="toogle-menu">{{email}}<i class="pi pi-angle-down ml-2"></i></a>
+                    <p-menu #menu [popup]="true" [model]="items"></p-menu>
                 </li>
             </ul>
         </nav>

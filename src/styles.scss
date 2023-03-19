@@ -11,3 +11,9 @@ html, body {
 a[type="button"] {
     text-decoration: none;
 }
+
+.menu-text-color-danger {
+    * {
+        color: #f44336 !important;
+    }
+}
