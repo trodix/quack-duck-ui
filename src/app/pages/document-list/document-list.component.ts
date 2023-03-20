@@ -16,6 +16,8 @@ export class DocumentListComponent implements OnInit {
   
   items!: MenuItem[];
 
+  menuItemsCreateDocument!: MenuItem[];
+
   pathList!: MenuItem[];
 
   home!: MenuItem;
@@ -108,6 +110,73 @@ export class DocumentListComponent implements OnInit {
     }
 
     menu.toggle(event);
+  }
+
+  onClickMenuCreateDocument(menuCreateDocument: any, event: any): void {
+
+    this.menuItemsCreateDocument = [
+      {
+        id: "template-word",
+        label: "New document",
+        items: [
+          {
+            label: "Word document",
+            icon: "pi pi-file",
+            command: () => {
+              this.createDocumentFromTemplate("word");
+            }
+          },
+          {
+            label: "Cell document",
+            icon: "pi pi-file",
+            command: () => {
+              this.createDocumentFromTemplate("cell");
+            }
+          },
+          {
+            label: "Slide document",
+            icon: "pi pi-file",
+            command: () => {
+              this.createDocumentFromTemplate("slide");
+            }
+          }
+        ]
+      }
+    ];
+
+    menuCreateDocument.toggle(event);
+  }
+
+  createDocumentFromTemplate(templateType: string): void {
+    console.log("Create new document from " + templateType + " template");
+    let templateName = "";
+
+    switch (templateType) {
+      case "word":
+        templateName = "Document1.docx";
+        break;
+      case "cell":
+        templateName = "calcul.xlsx";
+        break;
+      case "slide":
+        templateName = "Diaporama1.pptx";
+        break;
+      default:
+        break;
+    }
+
+    fetch(`/assets/file-templates/${templateName}`).then((response) => {
+      response.blob().then(tpl => {
+        this.documentService.uploadFile(this.currentPath, new File([tpl], `${templateName}`)).subscribe({ 
+          complete: () => {
+            this.loadDirectory(this.currentPath);
+          }, 
+          error: (error: Error) => {
+            this.messageService.add({ severity: 'error', summary: 'Error while creating the document. Please try again later.', detail: error.message });
+          }
+        });
+      });
+    });
   }
 
   onNodeSelected(node: DNode): void {

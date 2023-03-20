@@ -5,8 +5,12 @@
 
     <p-toolbar>
         <div class="p-toolbar-group-start">
-            <p-button label="New" icon="pi pi-folder" (onClick)="showDialogCreateDirectory()"></p-button>            
-            <p-button label="Upload" icon="pi pi-upload" styleClass="p-button-success" (onClick)="fileinput.click()"></p-button>
+            <p-button icon="pi pi-folder" (onClick)="showDialogCreateDirectory()"></p-button>    
+                    
+            <p-button (onClick)="onClickMenuCreateDocument(menuCreateDocument, $event)" class="toogle-menu" icon="pi pi-file"></p-button>
+            <p-menu #menuCreateDocument [popup]="true" [model]="menuItemsCreateDocument"></p-menu>
+
+            <p-button icon="pi pi-upload" styleClass="p-button-success" (onClick)="fileinput.click()"></p-button>
             <input #fileinput type="file" accept="*" (change)="onSelectedFile($event)" style="display:none">
         </div>
     
