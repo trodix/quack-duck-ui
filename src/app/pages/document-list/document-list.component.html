@@ -20,8 +20,8 @@
             <ng-template pTemplate="header">
                 <tr>
                     <th pSortableColumn="filename">Filename <p-sortIcon field="filename"></p-sortIcon></th>
-                    <th pSortableColumn="creator">Creator <p-sortIcon field="creator"></p-sortIcon></th>
-                    <th pSortableColumn="createdAt">Created at <p-sortIcon field="createdAt"></p-sortIcon></th>
+                    <th pSortableColumn="modified-by-name">Modified by <p-sortIcon field="modified-by-name"></p-sortIcon></th>
+                    <th pSortableColumn="modified-at">Modified at <p-sortIcon field="modified-at"></p-sortIcon></th>
                     <th>Actions</th>
                 </tr>
             </ng-template>
@@ -31,8 +31,8 @@
                         <img src="{{getIcon(node)}}" alt="file icon">
                         <span>{{ node.properties | property: 'cm:name' }}</span>
                     </td>
-                    <td>{{ node.properties | property: 'cm:creator-name' || "System" }}</td>
-                    <td>{{ node.properties | property: 'cm:created-at' | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+                    <td>{{ (node.properties | property: 'cm:modified-by-name') || (node.properties | property: 'cm:creator-name') || "System" }}</td>
+                    <td>{{ ((node.properties | property: 'cm:modified-at') || (node.properties | property: 'cm:created-at')) | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
                     <td class="col-actions">
                         <a (click)="onClickMenu(menu, $event, node)" class="toogle-menu">...</a>
                     </td>
