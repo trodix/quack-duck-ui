@@ -20,12 +20,13 @@
     </p-toolbar>
 
     <div class="card document-list-container">
-        <p-table [value]="(nodeList$ | async)!" dataKey="uuid" [scrollable]="true" scrollHeight="600px" [tableStyle]="{'min-width': '50rem'}">
+        <p-table [value]="(nodeList$ | async)!" dataKey="id" [scrollable]="true" scrollHeight="600px" [tableStyle]="{'min-width': '50rem'}">
             <ng-template pTemplate="header">
                 <tr>
                     <th pSortableColumn="filename">Filename <p-sortIcon field="filename"></p-sortIcon></th>
-                    <th pSortableColumn="modified-by-name">Modified by <p-sortIcon field="modified-by-name"></p-sortIcon></th>
-                    <th pSortableColumn="modified-at">Modified at <p-sortIcon field="modified-at"></p-sortIcon></th>
+                    <th pSortableColumn="modifiedByName">Modified by <p-sortIcon field="modifiedByName"></p-sortIcon></th>
+                    <th pSortableColumn="modifiedAt">Modified at <p-sortIcon field="modifiedAt"></p-sortIcon></th>
+                    <th pSortableColumn="contentSize">Size <p-sortIcon field="contentSize"></p-sortIcon></th>
                     <th>Actions</th>
                 </tr>
             </ng-template>
@@ -35,8 +36,9 @@
                         <img src="{{getIcon(node)}}" alt="file icon">
                         <span>{{ node.properties | property: 'cm:name' }}</span>
                     </td>
-                    <td>{{ (node.properties | property: 'cm:modified-by-name') || (node.properties | property: 'cm:creator-name') || "System" }}</td>
-                    <td>{{ ((node.properties | property: 'cm:modified-at') || (node.properties | property: 'cm:created-at')) | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+                    <td>{{ (node.properties | property: 'cm:modifiedByDisplayName') || (node.properties | property: 'cm:createdByDisplayName') }}</td>
+                    <td>{{ ((node.properties | property: 'cm:modifiedAt') || (node.properties | property: 'cm:createdAt')) | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+                    <td>{{ (node.properties | property: 'cm:contentSize') | size }}</td>
                     <td class="col-actions">
                         <a (click)="onClickMenu(menu, $event, node)" class="toogle-menu">...</a>
                     </td>
@@ -49,7 +51,7 @@
 
     <p-dialog *ngIf="createDirectoryForm" header="Create a new directory" [(visible)]="displayModalCreateDirectory" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">
         <form [formGroup]="createDirectoryForm" (ngSubmit)="createDirectory()" class="w-full">
-            <h3>Location {{currentPath}}</h3>
+            <h3>Location {{selectedNode.path}}</h3>
             <div class="flex flex-column">
                 <div class="form-fields flex flex-column">
                     <div class="field flex flex-column">

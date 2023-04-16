@@ -6,8 +6,8 @@ import { Property } from 'src/app/model/node';
 })
 export class PropertyPipe implements PipeTransform {
 
-  transform(properties: Property[], propName: string): string | undefined {
-    return properties.find(prop => prop.key === propName)?.value;
+  transform(properties: Property[] | null, propName: string): string | undefined {
+    return properties?.find(prop => prop.key === propName)?.value;
   }
 
 }

@@ -4,11 +4,11 @@
 
 export const environment = {
   production: false,
-  BACKEND_BASE_URL: 'http://trodix.local:8010',
-  ONLYOFFICE_BASE_URL: 'http://trodix.local:6080',
+  BACKEND_BASE_URL: 'http://trodix.local:8010/api/v1', // dont use localhost, only office container will connect to its own localhost
+  ONLYOFFICE_BASE_URL: 'http://localhost:6080',
   keycloak: {
     // Url of the Identity Provider
-    issuer: 'http://trodix.local:8080/realms/market',
+    issuer: 'http://localhost:8080/realms/market',
 
     // URL of the SPA to redirect the user to after login
     redirectUri: 'http://localhost:4200/',

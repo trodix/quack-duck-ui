@@ -1,11 +1,25 @@
 export interface DNode {
-  uuid: string;
+  id: number;
   bucket: string;
-  directoryPath: string;
+  parentId: number;
   versions: number;
   type: string;
-  aspects: string[];
+  path: NodePath[]
+  tags: string[];
   properties: Property[];
+  children: DNode[];
+}
+
+export interface CreateNode {
+  parentId: number;
+  type: string;
+  tags: string[];
+  properties: Property[];
+}
+
+export interface NodePath {
+  nodeId: number;
+  nodeName: string;
 }
 
 export interface DNodeDirRequest {

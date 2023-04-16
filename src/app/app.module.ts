@@ -21,6 +21,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { PropertyPipe } from './pipes/property.pipe';
+import { SizePipe } from './pipes/size.pipe';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { PropertyPipe } from './pipes/property.pipe';
     DocumentListComponent,
     FileEditorComponent,
     HeaderComponent,
-    PropertyPipe
+    PropertyPipe,
+    SizePipe
   ],
   imports: [
     BrowserModule,

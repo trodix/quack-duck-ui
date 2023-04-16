@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { IConfig } from '@onlyoffice/document-editor-angular';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { DNode } from 'src/app/model/node';
 import { UserProfile } from 'src/app/model/userprofile';
 import { DocumentService } from 'src/app/service/document.service';
-import { AuthConfigService } from 'src/config/auth-config.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -19,7 +18,7 @@ export class FileEditorComponent implements OnInit {
 
   config!: IConfig;
 
-  constructor(private oauthService: OAuthService, private route: Router, private documentService: DocumentService) {}
+  constructor(private oauthService: OAuthService, private route: Router, private documentService: DocumentService) { }
 
   async ngOnInit() {
 
@@ -30,20 +29,20 @@ export class FileEditorComponent implements OnInit {
 
     this.node = JSON.parse(raw);
 
-    if (this.node.uuid == null || this.node.properties == null) {
+    if (this.node.id == null || this.node.properties == null) {
       window.close();
     }
 
-    const docName = this.documentService.getDocumentName(this.node);
+    const docName = this.documentService.getNodeName(this.node);
     const userprofile = ((await this.oauthService.loadUserProfile()) as any).info as UserProfile;
 
     this.config = {
       document: {
         "fileType": this.documentService.getOnlyOfficeFileType(this.node),
         // TODO [key] uuid must be different for each modification of the document https://api.onlyoffice.com/editors/troubleshooting#key
-        "key": `${this.node?.uuid}`,
+        "key": `${this.node?.id}`,
         "title": `${docName}`,
-        "url": `${environment.BACKEND_BASE_URL}/integration/onlyoffice/document/${this.node?.uuid}/contents`
+        "url": `${environment.BACKEND_BASE_URL}/integration/onlyoffice/document/${this.node?.id}/contents`
       },
       documentType: this.documentService.getOnlyOfficeDocumentType(this.node),
       editorConfig: {
@@ -56,6 +55,8 @@ export class FileEditorComponent implements OnInit {
       },
     }
 
+    console.log(this.config);
+    
   }
 
   get ONLYOFFICE_BASE_URL() {

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
-import { ContentModel, DNode, Property } from 'src/app/model/node';
+import { Observable } from 'rxjs';
+import { ContentModel, CreateNode, DNode } from 'src/app/model/node';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -11,49 +11,30 @@ export class DocumentService {
 
   constructor(private http: HttpClient) { }
 
-  private transformNodeListProperties(input: Observable<DNode[]>): Observable<DNode[]> {
-    return input.pipe(
-      map(nodes => {
-        return nodes.map(node => {
-          const props: Property[] = [];
-          for (let key in node.properties) {
-            props.push({ key: key, value: (node.properties[key] as any as string) });
-          }
-          node.properties = props;
-          return node;
-        });
-      })
-    );
+
+  getNodesForParentId(parentId: number | null): Observable<DNode[]> {
+    return this.http.get<DNode[]>(`${environment.BACKEND_BASE_URL}/nodes/children/${parentId}`);
   }
 
-  private transformNodeProperties(input: Observable<DNode>): Observable<DNode> {
-    return input.pipe(
-      map(node => {
-        const props: Property[] = [];
-        for (let key in node.properties) {
-          props.push({ key: key, value: (node.properties[key] as any as string) });
-        }
-        node.properties = props;
-        return node;
-      })
-    );
-  }
-
-  getNodesForPath(path: string): Observable<DNode[]> {
-    return this.transformNodeListProperties(this.http.get<DNode[]>(`${environment.BACKEND_BASE_URL}/node?path=${path}`));
+  getNodeForParentId(parentId: number | null): Observable<DNode> {
+    return this.http.get<DNode>(`${environment.BACKEND_BASE_URL}/nodes/${parentId}`);
   }
 
   getFileByNodeId(nodeId: string): Observable<Blob> {
     return this.http.get<Blob>(`${environment.BACKEND_BASE_URL}/node/${nodeId}/content`);
   }
 
-  getDocumentName(node: DNode): string {
+  getNode(nodeId: number): Observable<DNode> {
+    return this.http.get<DNode>(`${environment.BACKEND_BASE_URL}/nodes/${nodeId}`);
+  }
+
+  getNodeName(node: DNode): string {
     return node.properties.find(prop => prop.key === "cm:name")?.value || "";
   }
 
   getOnlyOfficeDocumentType(node: DNode): string {
 
-    const fileExt = "." + this.getDocumentName(node).split(".").reverse()[0].toLowerCase();
+    const fileExt = "." + this.getNodeName(node).split(".").reverse()[0].toLowerCase();
 
     const extListWord = [
       ".doc", ".docm", ".docx", ".docxf", ".dot", ".dotm", ".dotx",
@@ -81,7 +62,7 @@ export class DocumentService {
   }
 
   getOnlyOfficeFileType(node: DNode): string {
-    return this.getDocumentName(node).split(".").reverse()[0].toLowerCase();
+    return this.getNodeName(node).split(".").reverse()[0].toLowerCase();
   }
 
   isSupportedByOnlyOffice(node: DNode): boolean {
@@ -96,43 +77,41 @@ export class DocumentService {
     return node.type === ContentModel.TYPE_DIRECTORY;
   }
 
-  createDirectory(path: string, name: string): Observable<DNode> {
+  createDirectory(parentId: number, name: string): Observable<DNode> {
 
-    const formData = new FormData();
-    formData.set("directoryPath", path);
-    formData.set("properties['cm:name']", name);
-    
-    return this.transformNodeProperties(this.http.post<DNode>(`${environment.BACKEND_BASE_URL}/directory`, formData));
+    const node: CreateNode = {
+      parentId: parentId,
+      type: ContentModel.TYPE_DIRECTORY,
+      tags: [],
+      properties: [
+        {
+          key: "cm:name",
+          value: name
+        }
+      ]
+    }
+
+    return this.http.post<DNode>(`${environment.BACKEND_BASE_URL}/nodes`, node);
   }
 
-  uploadFile(path: string, file: File): Observable<DNode> {
+  uploadFile(parentId: number | null, file: File): Observable<DNode> {
 
     const formData = new FormData();
+    formData.set("type", ContentModel.TYPE_CONTENT);
     formData.set("file", file);
-    formData.set("type", file.type);
-    formData.set("directoryPath", path);
+    //formData.set("type", file.type);
+    formData.set("parentId", String(parentId));
     formData.set("properties['cm:name']", file.name);
 
-    return this.transformNodeProperties(this.http.post<DNode>(`${environment.BACKEND_BASE_URL}/upload`, formData));
+    return this.http.post<DNode>(`${environment.BACKEND_BASE_URL}/storage/nodes`, formData);
   }
 
   delete(node: DNode): Observable<any> {
-    return this.http.delete(`${environment.BACKEND_BASE_URL}/node/${node.uuid}`);
+    return this.http.delete(`${environment.BACKEND_BASE_URL}/nodes/${node.id}`);
   }
 
   update(node: DNode): Observable<DNode> {
-    const formData = new FormData();
-    formData.set("nodeId", node.uuid);
-    formData.set("bucket", node.bucket);
-    formData.set("type", node.type);
-    formData.set("directoryPath", node.directoryPath);
-    formData.set("versions", String(node.versions));
-    formData.set("aspects", node.aspects.join(","));
-    node.properties.forEach(property => {
-      formData.set(`properties['${property.key}']`, property.value);
-    });
-    
-    return this.transformNodeProperties(this.http.put<DNode>(`${environment.BACKEND_BASE_URL}/node`, formData));
+    return this.http.put<DNode>(`${environment.BACKEND_BASE_URL}/nodes/${node.id}`, node);
   }
 
   getProperty(node: DNode, prop: string): string | null {

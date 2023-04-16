@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MenuItem, MessageService, SortEvent } from 'primeng/api';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MenuItem, MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
 import { ContentModel, DNode } from 'src/app/model/node';
 import { DocumentService } from 'src/app/service/document.service';
@@ -11,9 +12,11 @@ import { DocumentService } from 'src/app/service/document.service';
   styleUrls: ['./document-list.component.scss']
 })
 export class DocumentListComponent implements OnInit {
-  
+
+  readonly ROOT_NODE: number = 1;
+
   nodeList$!: Observable<DNode[]>;
-  
+
   items!: MenuItem[];
 
   menuItemsCreateDocument!: MenuItem[];
@@ -30,42 +33,55 @@ export class DocumentListComponent implements OnInit {
 
   displayModalRename: boolean = false;
 
-  selectedNode: DNode | null = null;
-  
-  @Input()
-  currentPath: string = "/";
-  
-  constructor(private messageService: MessageService, private documentService: DocumentService) { }
-  
+  selectedNode!: DNode;
+
+  editingNode: DNode | null = null;
+
+
+  constructor(private messageService: MessageService, private route: ActivatedRoute, private router: Router, private documentService: DocumentService) { }
+
   ngOnInit(): void {
-    this.loadDirectory("/");
+    this.route.queryParams.subscribe(params => {
+      const currentPathNodeId = params['nodeId'] || this.ROOT_NODE;
+      this.loadDirectory(currentPathNodeId);
+    });
   }
 
-  loadDirectory(path: string) {
-    this.currentPath = path;
-    this.nodeList$ = this.documentService.getNodesForPath(this.currentPath);
-    this.reloadBreadcrumb(this.currentPath);
+  loadDirectory(directoryId: number) {
+    this.documentService.getNode(directoryId).subscribe(node => {
+      this.selectedNode = node;
+      this.nodeList$ = this.documentService.getNodesForParentId(directoryId);
+      this.createBreadcrumb();
+    });
   }
 
-  reloadBreadcrumb(segment: string): void {
-    let path = this.currentPath.substring(0, this.currentPath.indexOf(segment) + segment.length);
-  
-    this.currentPath = path;
-    this.nodeList$ = this.documentService.getNodesForPath(this.currentPath);
+  openDirectory(nodeId: number): void {
+    this.router.navigate(['/'], { queryParams: { nodeId: nodeId }, queryParamsHandling: 'merge' });
+  }
 
-    this.pathList = this.currentPath.split("/").map(i => (
-      {
-        label: i,
+  refreshDocumentList() {
+    this.loadDirectory(this.selectedNode.id);
+  }
+
+  createBreadcrumb(): void {
+
+    const pathParts = this.selectedNode.path;
+
+    this.pathList = pathParts.map(i => {
+      return {
+        label: i.nodeName,
         command: ({ item }) => {
-          this.reloadBreadcrumb(i);
+          this.openDirectory(i.nodeId);
         }
       }
-    ));
+    });
 
-    this.pathList.shift();
-    this.home = {icon: 'pi pi-home', command: ({ item }) => {
-      this.reloadBreadcrumb("/");
-    }};
+    this.home = {
+      icon: 'pi pi-home',
+      command: ({ item }) => {
+        this.openDirectory(this.ROOT_NODE);
+      }
+    };
   }
 
   onClickMenu(menu: any, event: any, node: DNode): void {
@@ -167,10 +183,10 @@ export class DocumentListComponent implements OnInit {
 
     fetch(`/assets/file-templates/${templateName}`).then((response) => {
       response.blob().then(tpl => {
-        this.documentService.uploadFile(this.currentPath, new File([tpl], `${templateName}`)).subscribe({ 
+        this.documentService.uploadFile(this.selectedNode.id, new File([tpl], `${templateName}`)).subscribe({
           complete: () => {
-            this.loadDirectory(this.currentPath);
-          }, 
+            this.refreshDocumentList();
+          },
           error: (error: Error) => {
             this.messageService.add({ severity: 'error', summary: 'Error while creating the document. Please try again later.', detail: error.message });
           }
@@ -181,20 +197,15 @@ export class DocumentListComponent implements OnInit {
 
   onNodeSelected(node: DNode): void {
     if (this.isNodeTypeDirectory(node)) {
-      let requestedPath = ("/" + this.pathList.map(i => i.label).join('/') + "/" + this.documentService.getDocumentName(node));
-      if (requestedPath.startsWith("//")) {
-        requestedPath = requestedPath.slice(1);
-      }
-
-      this.loadDirectory(requestedPath);
+      this.openDirectory(node.id);
     }
   }
 
   getIcon(node: DNode): string {
     if (this.isNodeTypeContent(node)) {
-      switch(this.documentService.getOnlyOfficeDocumentType(node)) {
+      switch (this.documentService.getOnlyOfficeDocumentType(node)) {
         case "word":
-          if (this.documentService.getDocumentName(node).endsWith('.pdf')) {
+          if (this.documentService.getNodeName(node).endsWith('.pdf')) {
             return "/assets/img/office/pdf-icon.svg";
           } else {
             return "/assets/img/office/word-icon.svg";
@@ -217,7 +228,7 @@ export class DocumentListComponent implements OnInit {
 
   edit(node: DNode): void {
     localStorage.setItem("onlyoffice_opened_node", JSON.stringify(node));
-    window.open(`${window.location.origin}/edit/${node.uuid}`, '_blank', 'noreferrer');
+    window.open(`${window.location.origin}/edit/${node.id}`, '_blank', 'noreferrer');
   }
 
   isOnlyOfficeSupported(node: DNode): boolean {
@@ -243,12 +254,12 @@ export class DocumentListComponent implements OnInit {
   createDirectory(): void {
     const newDirectoryName = this.createDirectoryForm.get('newDirectoryName')?.value
 
-    this.documentService.createDirectory(this.currentPath, newDirectoryName).subscribe({ 
+    this.documentService.createDirectory(this.selectedNode.id, newDirectoryName).subscribe({
       complete: () => {
         this.displayModalCreateDirectory = false;
         this.createDirectoryForm.reset();
-        this.loadDirectory(this.currentPath);
-      }, 
+        this.refreshDocumentList();
+      },
       error: (error: Error) => {
         this.messageService.add({ severity: 'error', summary: 'Error while creating the directory. Please try again later.', detail: error.message });
       }
@@ -258,12 +269,12 @@ export class DocumentListComponent implements OnInit {
   onSelectedFile(event: Event): void {
     const target = event.target as HTMLInputElement;
     const files = target.files as FileList;
-    if (files.length > 0) {
+    if (this.selectedNode && files.length > 0) {
       const selectedFile = files[0];
-      this.documentService.uploadFile(this.currentPath, selectedFile).subscribe({ 
+      this.documentService.uploadFile(this.selectedNode.id, selectedFile).subscribe({
         complete: () => {
-          this.loadDirectory(this.currentPath);
-        }, 
+          this.refreshDocumentList();
+        },
         error: (error: Error) => {
           this.messageService.add({ severity: 'error', summary: 'Error while uploading the file. Please try again later.', detail: error.message });
         }
@@ -272,10 +283,10 @@ export class DocumentListComponent implements OnInit {
   }
 
   delete(node: DNode): void {
-    this.documentService.delete(node).subscribe({ 
+    this.documentService.delete(node).subscribe({
       complete: () => {
-        this.loadDirectory(this.currentPath);
-      }, 
+        this.refreshDocumentList();
+      },
       error: (error: Error) => {
         const nodeType = node.type == ContentModel.TYPE_DIRECTORY ? "directory" : "document";
         this.messageService.add({ severity: 'error', summary: `Error while deleting the ${nodeType}. Please try again later.`, detail: error.message });
@@ -285,40 +296,40 @@ export class DocumentListComponent implements OnInit {
 
   showDialogRename(node: DNode): void {
     this.renameForm = new FormGroup({
-      newNodeName: new FormControl(this.documentService.getDocumentName(node), Validators.required),
+      newNodeName: new FormControl(this.documentService.getNodeName(node), Validators.required),
     });
 
-    this.selectedNode = node;
+    this.editingNode = node;
     this.displayModalRename = true;
   }
 
   closeDialogRename() {
     this.displayModalRename = false;
-    this.selectedNode = null;
+    this.editingNode = null;
   }
 
   rename(): void {
-    if (this.selectedNode) {
+    if (this.editingNode) {
       const newName = this.renameForm.get("newNodeName")?.value;
-      const updateNodeData = { ...this.selectedNode };
+      const updateNodeData = { ...this.editingNode };
       updateNodeData.properties = [
         {
           key: "cm:name",
           value: newName
         }
       ]
-      this.documentService.update(updateNodeData).subscribe({ 
+      this.documentService.update(updateNodeData).subscribe({
         complete: () => {
-          this.loadDirectory(this.currentPath);
           this.closeDialogRename();
-        }, 
+          this.refreshDocumentList();
+        },
         error: (error: Error) => {
           const nodeType = updateNodeData.type == ContentModel.TYPE_DIRECTORY ? "directory" : "document";
           this.messageService.add({ severity: 'error', summary: `Error while updating the ${nodeType}. Please try again later.`, detail: error.message });
         }
       });
     }
-    
+
   }
 
 }
