@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { IConfig } from '@onlyoffice/document-editor-angular';
 import { Observable } from 'rxjs';
 import { ContentModel, CreateNode, DNode } from 'src/app/model/node';
 import { environment } from 'src/environments/environment';
@@ -112,6 +113,10 @@ export class DocumentService {
 
   update(node: DNode): Observable<DNode> {
     return this.http.put<DNode>(`${environment.BACKEND_BASE_URL}/nodes/${node.id}`, node);
+  }
+
+  getOnlyOfficeEditorConfig(node: DNode): Observable<IConfig> {
+    return this.http.post<IConfig>(`${environment.BACKEND_BASE_URL}/integration/onlyoffice/open-document-request/${node.id}`, null);
   }
 
   getProperty(node: DNode, prop: string): string | null {

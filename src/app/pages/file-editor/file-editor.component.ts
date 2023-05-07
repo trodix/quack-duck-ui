@@ -33,30 +33,11 @@ export class FileEditorComponent implements OnInit {
       window.close();
     }
 
-    const docName = this.documentService.getNodeName(this.node);
-    const userprofile = ((await this.oauthService.loadUserProfile()) as any).info as UserProfile;
+    this.documentService.getOnlyOfficeEditorConfig(this.node).subscribe(config => {
+      this.config = config;
+      console.log(this.config);
+    });
 
-    this.config = {
-      document: {
-        "fileType": this.documentService.getOnlyOfficeFileType(this.node),
-        // TODO [key] uuid must be different for each modification of the document https://api.onlyoffice.com/editors/troubleshooting#key
-        "key": `${this.node?.id}`,
-        "title": `${docName}`,
-        "url": `${environment.BACKEND_BASE_URL}/integration/onlyoffice/document/${this.node?.id}/contents`
-      },
-      documentType: this.documentService.getOnlyOfficeDocumentType(this.node),
-      editorConfig: {
-        "callbackUrl": `${environment.BACKEND_BASE_URL}/integration/onlyoffice/document`,
-        lang: window.navigator.language,
-        user: {
-          id: userprofile.sub,
-          name: userprofile.name,
-        }
-      },
-    }
-
-    console.log(this.config);
-    
   }
 
   get ONLYOFFICE_BASE_URL() {
