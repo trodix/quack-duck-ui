@@ -4,7 +4,7 @@ export interface DNode {
   parentId: number;
   versions: number;
   type: string;
-  path: NodePath[]
+  path: NodePath[];
   tags: string[];
   properties: Property[];
   children: DNode[];

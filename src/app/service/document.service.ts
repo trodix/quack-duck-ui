@@ -13,20 +13,16 @@ export class DocumentService {
   constructor(private http: HttpClient) { }
 
 
-  getNodesForParentId(parentId: number | null): Observable<DNode[]> {
-    return this.http.get<DNode[]>(`${environment.BACKEND_BASE_URL}/nodes/children/${parentId}`);
+  getNodesWithChildren(parentId: number | null): Observable<DNode[]> {
+    return this.http.get<DNode[]>(`${environment.BACKEND_BASE_URL}/nodes/${parentId}/children`);
   }
 
-  getNodeForParentId(parentId: number | null): Observable<DNode> {
-    return this.http.get<DNode>(`${environment.BACKEND_BASE_URL}/nodes/${parentId}`);
+  getNodeWithParents(nodeId: string | null): Observable<DNode> {
+    return this.http.get<DNode>(`${environment.BACKEND_BASE_URL}/nodes/${nodeId}`);
   }
 
   getFileByNodeId(nodeId: string): Observable<Blob> {
-    return this.http.get<Blob>(`${environment.BACKEND_BASE_URL}/node/${nodeId}/content`);
-  }
-
-  getNode(nodeId: number): Observable<DNode> {
-    return this.http.get<DNode>(`${environment.BACKEND_BASE_URL}/nodes/${nodeId}`);
+    return this.http.get<Blob>(`${environment.BACKEND_BASE_URL}/storage/nodes/${nodeId}/content`);
   }
 
   getNodeName(node: DNode): string {

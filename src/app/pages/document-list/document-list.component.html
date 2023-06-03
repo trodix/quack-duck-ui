@@ -51,7 +51,16 @@
 
     <p-dialog *ngIf="createDirectoryForm" header="Create a new directory" [(visible)]="displayModalCreateDirectory" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">
         <form [formGroup]="createDirectoryForm" (ngSubmit)="createDirectory()" class="w-full">
-            <h3>Location {{selectedNode.path}}</h3>
+            <h3>Path :
+                <span *ngFor="let path of selectedNode.path; let last = last;">
+                    <span>
+                        {{path.nodeName}}
+                    </span>
+                    <span *ngIf="!last">
+                        /
+                    </span>
+                </span>
+            </h3>
             <div class="flex flex-column">
                 <div class="form-fields flex flex-column">
                     <div class="field flex flex-column">

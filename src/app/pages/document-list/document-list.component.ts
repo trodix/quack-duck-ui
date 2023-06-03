@@ -48,9 +48,9 @@ export class DocumentListComponent implements OnInit {
   }
 
   loadDirectory(directoryId: number) {
-    this.documentService.getNode(directoryId).subscribe(node => {
-      this.selectedNode = node;
-      this.nodeList$ = this.documentService.getNodesForParentId(directoryId);
+    this.documentService.getNodeWithParents(directoryId.toString()).subscribe(node => {
+      this.selectedNode = { ...node, path: node.path.filter(p => p.nodeId != this.ROOT_NODE) };
+      this.nodeList$ = this.documentService.getNodesWithChildren(directoryId);
       this.createBreadcrumb();
     });
   }
@@ -64,24 +64,21 @@ export class DocumentListComponent implements OnInit {
   }
 
   createBreadcrumb(): void {
-
-    const pathParts = this.selectedNode.path;
-
-    this.pathList = pathParts.map(i => {
-      return {
-        label: i.nodeName,
-        command: ({ item }) => {
-          this.openDirectory(i.nodeId);
+      this.pathList = this.selectedNode.path.map(i => {
+        return {
+          label: i.nodeName,
+          command: ({ item }) => {
+            this.openDirectory(i.nodeId);
+          }
         }
-      }
-    });
+      });
 
-    this.home = {
-      icon: 'pi pi-home',
-      command: ({ item }) => {
-        this.openDirectory(this.ROOT_NODE);
-      }
-    };
+      this.home = {
+        icon: 'pi pi-home',
+        command: ({ item }) => {
+          this.openDirectory(this.ROOT_NODE);
+        }
+      };
   }
 
   onClickMenu(menu: any, event: any, node: DNode): void {
