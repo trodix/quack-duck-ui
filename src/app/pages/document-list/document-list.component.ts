@@ -33,6 +33,10 @@ export class DocumentListComponent implements OnInit {
 
   displayModalRename: boolean = false;
 
+  displayModalMove: boolean = false;
+
+  displayModalAuthorization: boolean = false;
+
   selectedNode!: DNode;
 
   editingNode: DNode | null = null;
@@ -88,6 +92,13 @@ export class DocumentListComponent implements OnInit {
         label: `${this.isNodeTypeContent(node) ? "Document" : "Directory"} actions`,
         items: [
           {
+            label: 'Move',
+            icon: 'pi pi-reply',
+            command: () => {
+              this.showDialogMove(node);
+            }
+          },
+          {
             label: 'Rename',
             icon: 'pi pi-refresh',
             command: () => {
@@ -100,7 +111,14 @@ export class DocumentListComponent implements OnInit {
             command: () => {
               this.delete(node);
             }
-          }
+          },
+          {
+            label: 'Manage permissions',
+            icon: 'pi pi-user',
+            command: () => {
+              this.showDialogAuthorization(node);
+            }
+          },
         ]
       }
     ];
@@ -289,6 +307,28 @@ export class DocumentListComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: `Error while deleting the ${nodeType}. Please try again later.`, detail: error.message });
       }
     });
+  }
+
+  showDialogMove(node: DNode): void {
+
+    this.editingNode = node;
+    this.displayModalMove = true;
+  }
+
+  showDialogAuthorization(node: DNode): void {
+
+    this.editingNode = node;
+    this.displayModalAuthorization = true;
+  }
+
+  closeDialogAuthorization() {
+    this.displayModalAuthorization = false;
+    this.editingNode = null;
+  }
+
+  closeDialogMove() {
+    this.displayModalMove = false;
+    this.editingNode = null;
   }
 
   showDialogRename(node: DNode): void {

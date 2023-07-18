@@ -37,7 +37,7 @@
                         <span>{{ node.properties | property: 'cm:name' }}</span>
                     </td>
                     <td>{{ (node.properties | property: 'cm:modifiedByDisplayName') || (node.properties | property: 'cm:createdByDisplayName') }}</td>
-                    <td>{{ ((node.properties | property: 'cm:modifiedAt') || (node.properties | property: 'cm:createdAt')) | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+                    <td>{{ ((node.properties | property: 'cm:modifiedAt') || (node.properties | property: 'cm:createdAt' )) | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
                     <td>{{ (node.properties | property: 'cm:contentSize') | size }}</td>
                     <td class="col-actions">
                         <a (click)="onClickMenu(menu, $event, node)" class="toogle-menu">...</a>
@@ -97,6 +97,35 @@
                 </div>
             </div>
         </form>
+    </p-dialog>
+
+    <p-dialog *ngIf="displayModalMove" header="Move" [(visible)]="displayModalMove" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">
+        <app-tree-file-selector [nodeList]="nodeList$"></app-tree-file-selector>
+
+        <div class="actions flex justify-content-end gap-2">
+            <div class="right flex align-items-end gap-2">
+                <button pButton type="button" label="Cancel" class="p-button-secondary" icon="pi pi-times" (click)="closeDialogMove()"></button>
+                <button pButton type="submit" label="Move" class="p-button-primary" icon="pi pi-save"></button>
+            </div>
+        </div>
+    </p-dialog>
+
+    <p-dialog 
+            *ngIf="displayModalAuthorization" 
+            header="Manage permissions - {{editingNode?.type == 'cm:content' ? 'Document' : 'Directory'}} {{editingNode!.properties| property: 'cm:name'}}" 
+            [(visible)]="displayModalAuthorization" 
+            [modal]="true" 
+            [style]="{width: '90vw', height: '90vh'}" 
+            [draggable]="false" 
+            [resizable]="false" 
+            [closable]="false">
+        <app-permission-manager *ngIf="editingNode" [editingNode]="editingNode"></app-permission-manager>
+
+        <div class="actions flex justify-content-end gap-2">
+            <div class="right flex align-items-end gap-2">
+                <button pButton type="submit" label="Close" class="p-button-primary" icon="pi pi-save" (click)="closeDialogAuthorization()"></button>
+            </div>
+        </div>
     </p-dialog>
 
 </div>

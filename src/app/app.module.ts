@@ -2,7 +2,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DocumentEditorModule } from "@onlyoffice/document-editor-angular";
 import { MessageService } from 'primeng/api';
@@ -22,6 +22,9 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { PropertyPipe } from './pipes/property.pipe';
 import { SizePipe } from './pipes/size.pipe';
+import { TreeFileSelectorComponent } from './components/tree-file-selector/tree-file-selector.component';
+import { PermissionManagerComponent } from './components/permission-manager/permission-manager.component';
+import { DropdownModule } from 'primeng/dropdown';
 
 
 @NgModule({
@@ -31,7 +34,9 @@ import { SizePipe } from './pipes/size.pipe';
     FileEditorComponent,
     HeaderComponent,
     PropertyPipe,
-    SizePipe
+    SizePipe,
+    TreeFileSelectorComponent,
+    PermissionManagerComponent
   ],
   imports: [
     BrowserModule,
@@ -46,9 +51,11 @@ import { SizePipe } from './pipes/size.pipe';
     BreadcrumbModule,
     ToolbarModule,
     ReactiveFormsModule,
+    FormsModule,
     ToastModule,
     InputTextModule,
-    AuthConfigModule
+    AuthConfigModule,
+    DropdownModule
   ],
   providers: [
     MessageService
