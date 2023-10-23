@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PermissionManagerComponent } from './permission-manager.component';
+import { NodePermissionManagerComponent } from './node-permission-manager.component';
 
 describe('PermissionManagerComponent', () => {
-  let component: PermissionManagerComponent;
-  let fixture: ComponentFixture<PermissionManagerComponent>;
+  let component: NodePermissionManagerComponent;
+  let fixture: ComponentFixture<NodePermissionManagerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PermissionManagerComponent ]
+      declarations: [ NodePermissionManagerComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PermissionManagerComponent);
+    fixture = TestBed.createComponent(NodePermissionManagerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

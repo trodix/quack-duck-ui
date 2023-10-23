@@ -10,10 +10,10 @@ interface DropDownItem { label: string, value: string }
 
 @Component({
   selector: 'app-permission-manager',
-  templateUrl: './permission-manager.component.html',
-  styleUrls: ['./permission-manager.component.scss']
+  templateUrl: './node-permission-manager.component.html',
+  styleUrls: ['./node-permission-manager.component.scss']
 })
-export class PermissionManagerComponent implements OnInit {
+export class NodePermissionManagerComponent implements OnInit {
 
   @Input() editingNode!: DNode;
   obj!: string;
@@ -91,7 +91,7 @@ export class PermissionManagerComponent implements OnInit {
   //     ));
   //     a.next(f);
   //   });
-  
+
   //   return a;
   // }
 

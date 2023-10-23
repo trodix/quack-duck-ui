@@ -23,7 +23,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { PropertyPipe } from './pipes/property.pipe';
 import { SizePipe } from './pipes/size.pipe';
 import { TreeFileSelectorComponent } from './components/tree-file-selector/tree-file-selector.component';
-import { PermissionManagerComponent } from './components/permission-manager/permission-manager.component';
+import { NodePermissionManagerComponent } from './components/node-permission-manager/node-permission-manager.component';
 import { DropdownModule } from 'primeng/dropdown';
 
 
@@ -36,7 +36,7 @@ import { DropdownModule } from 'primeng/dropdown';
     PropertyPipe,
     SizePipe,
     TreeFileSelectorComponent,
-    PermissionManagerComponent
+    NodePermissionManagerComponent
   ],
   imports: [
     BrowserModule,
