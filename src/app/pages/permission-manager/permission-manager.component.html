@@ -1,0 +1,37 @@
+<h1>Manage authorizations</h1>
+
+<div class="todo">
+  <h2>TODO</h2>
+  <ul>
+    <li>Create permission on object. ex: <code>p, user/role:xxx, feature:xxx, READ</code></li>
+    <li>Create group. ex: <code>g, role:superViewer, role:node:viewer</code> + <code>g, role:superViewer, role:xxx:viewer</code></li>
+    <li>Add subject (user or group) in group. ex: <code>g, 1adf1de8-4ffe-4290-9cc5-17698593b280, role:superViewer</code></li>
+  </ul>
+</div>
+
+<h2>Assign role to user</h2>
+<div class="assign-permission">
+  <form [formGroup]="assignPermissionFormGroup">
+    <div class="create-permission-fields">
+      <span>add</span>
+      <p-dropdown [options]="(usersAndRoles$ | async)!" formControlName="selectedUser" optionLabel="label" placeholder="Select a subject (user / role)"></p-dropdown>
+      <span>into</span>
+      <p-dropdown [options]="(usersAndRoles$ | async)!" formControlName="selectedRole" optionLabel="label" placeholder="Select a subject (user / role)"></p-dropdown>
+      <button pButton type="submit" label="Assign" class="p-button-primary" icon="pi pi-save" [disabled]="!assignPermissionFormGroup.valid" (click)="assignRole()"></button>
+    </div>
+  </form>
+</div>
+
+<h2>Add a policy</h2>
+<div class="add-policy">
+  <form [formGroup]="createPermissionFormGroup">
+    <div class="add-policy-fields">
+      <p-dropdown [options]="(usersAndRoles$ | async)!" formControlName="subject" optionLabel="label" placeholder="Select a subject (user / role)"></p-dropdown>
+      <span>on</span>
+      <p-dropdown [options]="(obj$ | async)!" formControlName="selectedObj" optionLabel="label" placeholder="Select an object"></p-dropdown>
+      <span>can</span>
+      <p-dropdown [options]="(actions$ | async)!" formControlName="selectedAction" optionLabel="label" placeholder="Select an action"></p-dropdown>
+      <button pButton type="submit" label="Create" class="p-button-primary" icon="pi pi-save" [disabled]="!createPermissionFormGroup.valid" (click)="addPolicy()"></button>
+    </div>
+  </form>
+</div>

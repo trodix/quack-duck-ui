@@ -25,6 +25,7 @@ import { SizePipe } from './pipes/size.pipe';
 import { TreeFileSelectorComponent } from './components/tree-file-selector/tree-file-selector.component';
 import { NodePermissionManagerComponent } from './components/node-permission-manager/node-permission-manager.component';
 import { DropdownModule } from 'primeng/dropdown';
+import { PermissionManagerComponent } from './pages/permission-manager/permission-manager.component';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { DropdownModule } from 'primeng/dropdown';
     PropertyPipe,
     SizePipe,
     TreeFileSelectorComponent,
-    NodePermissionManagerComponent
+    NodePermissionManagerComponent,
+    PermissionManagerComponent
   ],
   imports: [
     BrowserModule,

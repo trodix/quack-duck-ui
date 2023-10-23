@@ -5,15 +5,15 @@
 
     <p-toolbar>
         <div class="p-toolbar-group-start">
-            <p-button icon="pi pi-folder" (onClick)="showDialogCreateDirectory()"></p-button>    
-                    
+            <p-button icon="pi pi-folder" (onClick)="showDialogCreateDirectory()"></p-button>
+
             <p-button (onClick)="onClickMenuCreateDocument(menuCreateDocument, $event)" class="toogle-menu" icon="pi pi-file"></p-button>
             <p-menu #menuCreateDocument [popup]="true" [model]="menuItemsCreateDocument"></p-menu>
 
             <p-button icon="pi pi-upload" styleClass="p-button-success" (onClick)="fileinput.click()"></p-button>
             <input #fileinput type="file" accept="*" (change)="onSelectedFile($event)" style="display:none">
         </div>
-    
+
         <div class="p-toolbar-group-end">
             <p-button icon="pi pi-search"></p-button>
         </div>
@@ -110,16 +110,16 @@
         </div>
     </p-dialog>
 
-    <p-dialog 
-            *ngIf="displayModalAuthorization" 
-            header="Manage permissions - {{editingNode?.type == 'cm:content' ? 'Document' : 'Directory'}} {{editingNode!.properties| property: 'cm:name'}}" 
-            [(visible)]="displayModalAuthorization" 
-            [modal]="true" 
-            [style]="{width: '90vw', height: '90vh'}" 
-            [draggable]="false" 
-            [resizable]="false" 
+    <p-dialog
+            *ngIf="displayModalAuthorization"
+            header="Manage permissions - {{editingNode?.type == 'cm:content' ? 'Document' : 'Directory'}} {{editingNode!.properties| property: 'cm:name'}}"
+            [(visible)]="displayModalAuthorization"
+            [modal]="true"
+            [style]="{width: '90vw', height: '90vh'}"
+            [draggable]="false"
+            [resizable]="false"
             [closable]="false">
-        <app-permission-manager *ngIf="editingNode" [editingNode]="editingNode"></app-permission-manager>
+        <app-node-permission-manager *ngIf="editingNode" [editingNode]="editingNode"></app-node-permission-manager>
 
         <div class="actions flex justify-content-end gap-2">
             <div class="right flex align-items-end gap-2">

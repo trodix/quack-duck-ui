@@ -9,7 +9,7 @@ import { NodePermissionService } from 'src/app/service/node-permission.service';
 interface DropDownItem { label: string, value: string }
 
 @Component({
-  selector: 'app-permission-manager',
+  selector: 'app-node-permission-manager',
   templateUrl: './node-permission-manager.component.html',
   styleUrls: ['./node-permission-manager.component.scss']
 })
@@ -50,7 +50,7 @@ export class NodePermissionManagerComponent implements OnInit {
           );
         },
         error: (error) => {
-          this.messageService.add({ severity: 'error', summary: `Unable de grant permission ${selectedAction.value} to ${selectedSubject.value} on resource ${this.obj}. Please try again later.`, detail: error.message });
+          this.messageService.add({ severity: 'error', summary: `Unable to grant permission ${selectedAction.value} to ${selectedSubject.value} on resource ${this.obj}. Please try again later.`, detail: error.message });
         }
       }
     );
