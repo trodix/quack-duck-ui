@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ExtendedPermission, PermissionOnResource } from 'src/app/model/PermissionOnResource';
+import { ExtendedPermission, Policy } from 'src/app/model/Policy';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -15,8 +15,8 @@ export class NodePermissionService {
     return this.http.get<ExtendedPermission[]>(`${environment.BACKEND_BASE_URL}/nodes/${nodeId}/permissions`);
   }
 
-  getPermissionOnNodeForUser(nodeId: string): Observable<PermissionOnResource[]> {
-    return this.http.get<PermissionOnResource[]>(`${environment.BACKEND_BASE_URL}/nodes/${nodeId}/user-permissions`);
+  getPermissionOnNodeForUser(nodeId: string): Observable<Policy[]> {
+    return this.http.get<Policy[]>(`${environment.BACKEND_BASE_URL}/nodes/${nodeId}/user-permissions`);
   }
 
   getSubjects(nodeId: string, action: string): Observable<string[]> {
@@ -32,7 +32,7 @@ export class NodePermissionService {
   }
 
   removePermission(nodeId: string, authz: ExtendedPermission): Observable<void> {
-    return this.http.post<void>(`${environment.BACKEND_BASE_URL}/nodes/remove-permissions`, [authz.permission]);
+    return this.http.post<void>(`${environment.BACKEND_BASE_URL}/nodes/remove-permissions`, [authz.policy]);
   }
 
 }

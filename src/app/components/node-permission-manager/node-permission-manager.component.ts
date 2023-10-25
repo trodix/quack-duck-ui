@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Observable, map } from 'rxjs';
-import { ExtendedPermission, PermissionOnResource } from 'src/app/model/PermissionOnResource';
+import { ExtendedPermission, Policy } from 'src/app/model/Policy';
 import { DNode } from 'src/app/model/node';
 import { NodePermissionService } from 'src/app/service/node-permission.service';
 
@@ -46,7 +46,7 @@ export class NodePermissionManagerComponent implements OnInit {
         complete: () => {
           this.messageService.add({ severity: 'success', summary: `Permission ${selectedAction.value} granted to ${selectedSubject.value} on resource ${this.obj}.`});
           this.permissions$ = this.permissions$.pipe(
-            map((data: ExtendedPermission[]) => [...data, { permission: { sub: selectedSubject.value, obj: this.obj, act: selectedAction.value }, hasPermission: true }])
+            map((data: ExtendedPermission[]) => [...data, { policy: { sub: selectedSubject.value, obj: this.obj, act: selectedAction.value }, hasPermission: true }])
           );
         },
         error: (error) => {
@@ -60,13 +60,13 @@ export class NodePermissionManagerComponent implements OnInit {
 
     this.nodePermissionService.removePermission(this.editingNode.id.toString(), authz).subscribe({
         complete: () => {
-          this.messageService.add({ severity: 'success', summary: `Permission ${authz.permission.act} removed to ${authz.permission.sub} on resource ${authz.permission.obj}.`});
+          this.messageService.add({ severity: 'success', summary: `Permission ${authz.policy.act} removed to ${authz.policy.sub} on resource ${authz.policy.obj}.`});
           this.permissions$ = this.permissions$.pipe(
-            map((data: ExtendedPermission[]) => [...data.filter(i => !(i.permission.sub === authz.permission.sub && i.permission.obj === authz.permission.obj && i.permission.act === authz.permission.act))])
+            map((data: ExtendedPermission[]) => [...data.filter(i => !(i.policy.sub === authz.policy.sub && i.policy.obj === authz.policy.obj && i.policy.act === authz.policy.act))])
           );
         },
         error: (error) => {
-          this.messageService.add({ severity: 'error', summary: `Unable de remove permission ${authz.permission.act} to ${authz.permission.sub} on resource ${authz.permission.obj}. Please try again later.`, detail: error.message });
+          this.messageService.add({ severity: 'error', summary: `Unable de remove permission ${authz.policy.act} to ${authz.policy.sub} on resource ${authz.policy.obj}. Please try again later.`, detail: error.message });
         }
       }
     );
