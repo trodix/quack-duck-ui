@@ -48,4 +48,8 @@ export class FileEditorComponent implements OnInit {
     console.log("Document ready !")
   }
 
+  onError(event: object): void {
+    console.log("OnlyOffice Error: " + JSON.stringify(event))
+  }
+
 }
