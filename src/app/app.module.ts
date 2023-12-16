@@ -26,6 +26,8 @@ import { TreeFileSelectorComponent } from './components/tree-file-selector/tree-
 import { NodePermissionManagerComponent } from './components/node-permission-manager/node-permission-manager.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { PermissionManagerComponent } from './pages/permission-manager/permission-manager.component';
+import { SearchDocumentsComponent } from './components/search-documents/search-documents.component';
+import {AutoCompleteModule} from "primeng/autocomplete";
 
 
 @NgModule({
@@ -38,7 +40,8 @@ import { PermissionManagerComponent } from './pages/permission-manager/permissio
     SizePipe,
     TreeFileSelectorComponent,
     NodePermissionManagerComponent,
-    PermissionManagerComponent
+    PermissionManagerComponent,
+    SearchDocumentsComponent
   ],
   imports: [
     BrowserModule,
@@ -57,7 +60,8 @@ import { PermissionManagerComponent } from './pages/permission-manager/permissio
     ToastModule,
     InputTextModule,
     AuthConfigModule,
-    DropdownModule
+    DropdownModule,
+    AutoCompleteModule
   ],
   providers: [
     MessageService

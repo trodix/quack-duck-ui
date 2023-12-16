@@ -2,8 +2,27 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IConfig } from '@onlyoffice/document-editor-angular';
 import { Observable } from 'rxjs';
-import { ContentModel, CreateNode, DNode } from 'src/app/model/node';
+import {ContentModel, CreateNode, DNode, Property} from 'src/app/model/node';
 import { environment } from 'src/environments/environment';
+
+
+export interface SearchQuery {
+  term: string;
+  value: string;
+}
+
+export interface SearchResult {
+  resultCount: number
+  items: SearchResultEntry[]
+}
+
+export interface SearchResultEntry {
+  dbId: number
+  type: string
+  tags: string[]
+  properties: Property[]
+  filecontent: string
+}
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +30,11 @@ import { environment } from 'src/environments/environment';
 export class DocumentService {
 
   constructor(private http: HttpClient) { }
+
+  edit(node: DNode): void {
+    localStorage.setItem("onlyoffice_opened_node", JSON.stringify(node));
+    window.open(`${window.location.origin}/edit/${node.id}`, '_blank', 'noreferrer');
+  }
 
 
   getNodesWithChildren(parentId: number | null): Observable<DNode[]> {
@@ -127,5 +151,11 @@ export class DocumentService {
     }
     return null;
   }
+
+  search(query: SearchQuery): Observable<SearchResult> {
+    return this.http.post<SearchResult>(`${environment.BACKEND_BASE_URL}/search`, query);
+  }
+
+
 
 }

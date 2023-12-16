@@ -1,0 +1,13 @@
+<div class="search-documents">
+  <p-autoComplete
+                  [(ngModel)]="selectedItem"
+                  [suggestions]="matchingQueryDocuments?.items || []"
+                  (completeMethod)="searchDocuments($event)"
+                  (onSelect)="onSelect($event)"
+                  placeholder="Search a document"
+  >
+    <ng-template let-entry pTemplate="item">
+      {{getSuggestionsLabels(entry)}}
+    </ng-template>
+  </p-autoComplete>
+</div>

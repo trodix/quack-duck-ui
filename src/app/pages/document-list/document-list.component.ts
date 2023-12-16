@@ -131,7 +131,7 @@ export class DocumentListComponent implements OnInit {
               label: 'Open in OnlyOffice',
               icon: 'pi pi-file-edit',
               command: () => {
-                this.edit(node);
+                this.documentService.edit(node);
               }
             }
           )
@@ -239,11 +239,6 @@ export class DocumentListComponent implements OnInit {
 
     // if not content type and not directory
     return "/assets/img/unknown_file-icon.svg";
-  }
-
-  edit(node: DNode): void {
-    localStorage.setItem("onlyoffice_opened_node", JSON.stringify(node));
-    window.open(`${window.location.origin}/edit/${node.id}`, '_blank', 'noreferrer');
   }
 
   isOnlyOfficeSupported(node: DNode): boolean {
