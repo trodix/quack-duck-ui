@@ -28,6 +28,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import { PermissionManagerComponent } from './pages/permission-manager/permission-manager.component';
 import { SearchDocumentsComponent } from './components/search-documents/search-documents.component';
 import {AutoCompleteModule} from "primeng/autocomplete";
+import { ImageGalleryComponent } from './components/image-gallery/image-gallery.component';
+import {GalleriaModule} from "primeng/galleria";
+import {ImageModule} from "primeng/image";
 
 
 @NgModule({
@@ -41,7 +44,8 @@ import {AutoCompleteModule} from "primeng/autocomplete";
     TreeFileSelectorComponent,
     NodePermissionManagerComponent,
     PermissionManagerComponent,
-    SearchDocumentsComponent
+    SearchDocumentsComponent,
+    ImageGalleryComponent
   ],
   imports: [
     BrowserModule,
@@ -61,7 +65,9 @@ import {AutoCompleteModule} from "primeng/autocomplete";
     InputTextModule,
     AuthConfigModule,
     DropdownModule,
-    AutoCompleteModule
+    AutoCompleteModule,
+    GalleriaModule,
+    ImageModule
   ],
   providers: [
     MessageService

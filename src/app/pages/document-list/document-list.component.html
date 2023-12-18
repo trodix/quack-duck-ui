@@ -21,7 +21,7 @@
     </p-toolbar>
 
     <div class="card document-list-container">
-        <p-table [value]="(nodeList$ | async)!" dataKey="id" [scrollable]="true" scrollHeight="600px" [tableStyle]="{'min-width': '50rem'}">
+        <p-table [value]="(nodeList$ | async)!" dataKey="id" selectionMode="multiple" [metaKeySelection]="true" [scrollable]="true" scrollHeight="600px" [tableStyle]="{'min-width': '50rem'}">
             <ng-template pTemplate="header">
                 <tr>
                     <th pSortableColumn="filename">Filename <p-sortIcon field="filename"></p-sortIcon></th>
@@ -31,9 +31,9 @@
                     <th>Actions</th>
                 </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-node>
-                <tr [pContextMenuRow]="node">
-                    <td class="col-filename" (click)="onNodeSelected(node)">
+            <ng-template pTemplate="body" let-node let-rowIndex="rowIndex">
+                <tr [pSelectableRow] [pSelectableRowIndex]="rowIndex" [pContextMenuRow]="node">
+                    <td class="col-filename" (click)="onNodeSelected(node)" (dblclick)="onNodeDoubleClicked(node)">
                         <img src="{{getIcon(node)}}" alt="file icon">
                         <span>{{ node.properties | property: 'cm:name' }}</span>
                     </td>
@@ -48,12 +48,14 @@
         </p-table>
     </div>
 
+<!--    <p-image [preview]="true" [hidden]="false" [src]="sanitizer.bypassSecurityTrustUrl(previewingContentUrl)" alt="Image" width="250"></p-image>-->
+
     <p-menu #menu [popup]="true" [model]="items"></p-menu>
 
     <p-dialog *ngIf="createDirectoryForm" header="Create a new directory" [(visible)]="displayModalCreateDirectory" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">
         <form [formGroup]="createDirectoryForm" (ngSubmit)="createDirectory()" class="w-full">
             <h3>Path :
-                <span *ngFor="let path of selectedNode.path; let last = last;">
+                <span *ngFor="let path of currentNode.path; let last = last;">
                     <span>
                         {{path.nodeName}}
                     </span>
@@ -100,13 +102,13 @@
         </form>
     </p-dialog>
 
-    <p-dialog *ngIf="displayModalMove" header="Move" [(visible)]="displayModalMove" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">
-        <app-tree-file-selector [nodeList]="nodeList$"></app-tree-file-selector>
+    <p-dialog *ngIf="displayModalMove" header="Choose a destination" [(visible)]="displayModalMove" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">
+        <app-tree-file-selector [actionUponNode]="editingNode!" [rootDirectoryId]="ROOT_NODE" (onSelectedDirectory)="moveDestination = $event"></app-tree-file-selector>
 
         <div class="actions flex justify-content-end gap-2">
             <div class="right flex align-items-end gap-2">
                 <button pButton type="button" label="Cancel" class="p-button-secondary" icon="pi pi-times" (click)="closeDialogMove()"></button>
-                <button pButton type="submit" label="Move" class="p-button-primary" icon="pi pi-save"></button>
+                <button pButton type="button" label="Move" class="p-button-primary" icon="pi pi-save" [disabled]="!isMoveFormValid()" (click)="moveNodeToDir()"></button>
             </div>
         </div>
     </p-dialog>

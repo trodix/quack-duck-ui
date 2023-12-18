@@ -1,1 +1,13 @@
-<p>tree-file-selector works!</p>
+<small>Move <span>{{actionUponNode.properties | property: "cm:name"}}</span> to <span>{{selectedDirectoryPath}}</span></small>
+<div>
+  <p-breadcrumb [home]="breadcrumbHome" [model]="breadcrumb"></p-breadcrumb>
+  <div class="directory-list">
+    <ul>
+      <li class="directory-row" [ngClass]="{'selected-row': isSelected(dir)}" *ngFor="let dir of directories | async" (dblclick)="loadDirectories(dir.id)" (click)="selectDirectory(dir)">
+        <img src="/assets/img/directory_closed-icon.svg" alt="file icon">
+        <span>{{ dir.properties | property: "cm:name" }}</span>
+      </li>
+    </ul>
+  </div>
+</div>
+

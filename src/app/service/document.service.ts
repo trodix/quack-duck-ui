@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IConfig } from '@onlyoffice/document-editor-angular';
-import { Observable } from 'rxjs';
+import {map, Observable} from 'rxjs';
 import {ContentModel, CreateNode, DNode, Property} from 'src/app/model/node';
 import { environment } from 'src/environments/environment';
 
@@ -36,6 +36,9 @@ export class DocumentService {
     window.open(`${window.location.origin}/edit/${node.id}`, '_blank', 'noreferrer');
   }
 
+  moveNode(node: DNode, destinationId: number) {
+    return this.http.put<DNode>(`${environment.BACKEND_BASE_URL}/nodes/${node.id}/move`, { destinationId: destinationId });
+  }
 
   getNodesWithChildren(parentId: number | null): Observable<DNode[]> {
     return this.http.get<DNode[]>(`${environment.BACKEND_BASE_URL}/nodes/${parentId}/children`);
@@ -46,7 +49,8 @@ export class DocumentService {
   }
 
   getFileByNodeId(nodeId: string): Observable<Blob> {
-    return this.http.get<Blob>(`${environment.BACKEND_BASE_URL}/storage/nodes/${nodeId}/content`);
+    // @ts-ignore
+    return this.http.get<Blob>(`${environment.BACKEND_BASE_URL}/storage/nodes/${nodeId}/content`, { responseType: 'blob' })
   }
 
   getNodeName(node: DNode): string {

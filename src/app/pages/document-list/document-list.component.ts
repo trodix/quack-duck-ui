@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MenuItem, MessageService } from 'primeng/api';
-import { Observable } from 'rxjs';
-import { ContentModel, DNode } from 'src/app/model/node';
-import { DocumentService } from 'src/app/service/document.service';
+import {Component, OnInit} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
+import {MenuItem, MessageService} from 'primeng/api';
+import {Observable} from 'rxjs';
+import {ContentModel, DNode} from 'src/app/model/node';
+import {DocumentService} from 'src/app/service/document.service';
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-document-list',
@@ -37,12 +38,23 @@ export class DocumentListComponent implements OnInit {
 
   displayModalAuthorization: boolean = false;
 
-  selectedNode!: DNode;
+  currentNode!: DNode;
 
   editingNode: DNode | null = null;
 
+  previewingNode: DNode | null = null;
 
-  constructor(private messageService: MessageService, private route: ActivatedRoute, private router: Router, private documentService: DocumentService) { }
+  previewingContentUrl: string = "";
+
+  moveDestination: DNode | null = null;
+
+  constructor(
+    private messageService: MessageService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private documentService: DocumentService,
+    public sanitizer: DomSanitizer
+  ) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -53,7 +65,7 @@ export class DocumentListComponent implements OnInit {
 
   loadDirectory(directoryId: number) {
     this.documentService.getNodeWithParents(directoryId.toString()).subscribe(node => {
-      this.selectedNode = { ...node, path: node.path.filter(p => p.nodeId != this.ROOT_NODE) };
+      this.currentNode = { ...node, path: node.path.filter(p => p.nodeId != this.ROOT_NODE) };
       this.nodeList$ = this.documentService.getNodesWithChildren(directoryId);
       this.createBreadcrumb();
     });
@@ -63,12 +75,32 @@ export class DocumentListComponent implements OnInit {
     this.router.navigate(['/'], { queryParams: { nodeId: nodeId }, queryParamsHandling: 'merge' });
   }
 
+  openPreviewFile(node: DNode) {
+
+    if (this.isOnlyOfficeSupported(node)) {
+      this.documentService.edit(node);
+    }
+    // else {
+    //   this.previewingNode = node;
+    //   this.documentService.getFileByNodeId(String(this.previewingNode?.id)).subscribe(data => {
+    //     const objectURL = URL.createObjectURL(data);
+    //     this.previewingContentUrl = objectURL;
+    //   });
+    // }
+
+  }
+
+  closePreviewFile() {
+    this.previewingNode = null;
+    this.previewingContentUrl = "";
+  }
+
   refreshDocumentList() {
-    this.loadDirectory(this.selectedNode.id);
+    this.loadDirectory(this.currentNode.id);
   }
 
   createBreadcrumb(): void {
-      this.pathList = this.selectedNode.path.map(i => {
+      this.pathList = this.currentNode.path.map(i => {
         return {
           label: i.nodeName,
           command: ({ item }) => {
@@ -198,7 +230,7 @@ export class DocumentListComponent implements OnInit {
 
     fetch(`/assets/file-templates/${templateName}`).then((response) => {
       response.blob().then(tpl => {
-        this.documentService.uploadFile(this.selectedNode.id, new File([tpl], `${templateName}`)).subscribe({
+        this.documentService.uploadFile(this.currentNode.id, new File([tpl], `${templateName}`)).subscribe({
           complete: () => {
             this.refreshDocumentList();
           },
@@ -213,6 +245,14 @@ export class DocumentListComponent implements OnInit {
   onNodeSelected(node: DNode): void {
     if (this.isNodeTypeDirectory(node)) {
       this.openDirectory(node.id);
+    } else {
+      console.log("Selected node " + JSON.stringify(node));
+    }
+  }
+
+  onNodeDoubleClicked(node: DNode): void {
+    if (!this.isNodeTypeDirectory(node)) {
+      this.openPreviewFile(node);
     }
   }
 
@@ -261,10 +301,32 @@ export class DocumentListComponent implements OnInit {
     this.displayModalCreateDirectory = true;
   }
 
+  isMoveFormValid() {
+    return this.moveDestination && this.editingNode?.id != this.moveDestination?.id && this.moveDestination?.id != this.editingNode?.parentId;
+  }
+
+  moveNodeToDir() {
+    if (this.isMoveFormValid()) {
+      this.documentService.moveNode(this.editingNode!, this.moveDestination!.id).subscribe({
+        complete: () => {
+          const nodeType = this.editingNode!.type == ContentModel.TYPE_DIRECTORY ? "Directory" : "Document";
+          this.messageService.add({ severity: 'success', summary: `${nodeType} ${this.documentService.getNodeName(this.editingNode!)} moved with success`});
+          this.moveDestination = null;
+          this.closeDialogMove();
+          this.refreshDocumentList();
+        },
+        error: (error: Error) => {
+          const nodeType = this.editingNode!.type == ContentModel.TYPE_DIRECTORY ? "Directory" : "Document";
+          this.messageService.add({ severity: 'error', summary: `Error while moving the ${nodeType} ${this.documentService.getNodeName(this.editingNode!)}. Please try again later.`, detail: error.message });
+        }
+      });
+    }
+  }
+
   createDirectory(): void {
     const newDirectoryName = this.createDirectoryForm.get('newDirectoryName')?.value
 
-    this.documentService.createDirectory(this.selectedNode.id, newDirectoryName).subscribe({
+    this.documentService.createDirectory(this.currentNode.id, newDirectoryName).subscribe({
       complete: () => {
         this.displayModalCreateDirectory = false;
         this.createDirectoryForm.reset();
@@ -279,9 +341,9 @@ export class DocumentListComponent implements OnInit {
   onSelectedFile(event: Event): void {
     const target = event.target as HTMLInputElement;
     const files = target.files as FileList;
-    if (this.selectedNode && files.length > 0) {
+    if (this.currentNode && files.length > 0) {
       const selectedFile = files[0];
-      this.documentService.uploadFile(this.selectedNode.id, selectedFile).subscribe({
+      this.documentService.uploadFile(this.currentNode.id, selectedFile).subscribe({
         complete: () => {
           this.refreshDocumentList();
         },
