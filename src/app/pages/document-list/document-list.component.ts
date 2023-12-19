@@ -2,10 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MenuItem, MessageService} from 'primeng/api';
-import {Observable} from 'rxjs';
 import {ContentModel, DNode} from 'src/app/model/node';
 import {DocumentService} from 'src/app/service/document.service';
 import {DomSanitizer} from "@angular/platform-browser";
+import {PaginationResult} from "../../model/pagination/pagination-result";
 
 @Component({
   selector: 'app-document-list',
@@ -16,7 +16,7 @@ export class DocumentListComponent implements OnInit {
 
   readonly ROOT_NODE: number = 1;
 
-  nodeList$!: Observable<DNode[]>;
+  nodeList: PaginationResult<DNode[]> | null = null;
 
   items!: MenuItem[];
 
@@ -63,12 +63,18 @@ export class DocumentListComponent implements OnInit {
     });
   }
 
-  loadDirectory(directoryId: number) {
+  loadDirectory(directoryId: number, offset= 0, pageSize = 10) {
     this.documentService.getNodeWithParents(directoryId.toString()).subscribe(node => {
       this.currentNode = { ...node, path: node.path.filter(p => p.nodeId != this.ROOT_NODE) };
-      this.nodeList$ = this.documentService.getNodesWithChildren(directoryId);
+      this.documentService.getNodesWithChildren(directoryId, offset, pageSize).subscribe(data => {
+        this.nodeList = data;
+      });
       this.createBreadcrumb();
     });
+  }
+
+  handlePagination($event: {page: number, first: number, rows: number, pageCount: number}) {
+    this.loadDirectory(this.currentNode.id, $event.page * $event.rows, $event.rows)
   }
 
   openDirectory(nodeId: number): void {

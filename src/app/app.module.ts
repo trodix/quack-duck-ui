@@ -31,6 +31,7 @@ import {AutoCompleteModule} from "primeng/autocomplete";
 import { ImageGalleryComponent } from './components/image-gallery/image-gallery.component';
 import {GalleriaModule} from "primeng/galleria";
 import {ImageModule} from "primeng/image";
+import {PaginatorModule} from "primeng/paginator";
 
 
 @NgModule({
@@ -67,7 +68,8 @@ import {ImageModule} from "primeng/image";
     DropdownModule,
     AutoCompleteModule,
     GalleriaModule,
-    ImageModule
+    ImageModule,
+    PaginatorModule
   ],
   providers: [
     MessageService

@@ -21,7 +21,15 @@
     </p-toolbar>
 
     <div class="card document-list-container">
-        <p-table [value]="(nodeList$ | async)!" dataKey="id" selectionMode="multiple" [metaKeySelection]="true" [scrollable]="true" scrollHeight="600px" [tableStyle]="{'min-width': '50rem'}">
+        <p-table
+          [value]="nodeList?.entries || []"
+          dataKey="id"
+          selectionMode="multiple"
+          [metaKeySelection]="true"
+          [scrollable]="true"
+          scrollHeight="600px"
+          [tableStyle]="{'min-width': '50rem'}"
+        >
             <ng-template pTemplate="header">
                 <tr>
                     <th pSortableColumn="filename">Filename <p-sortIcon field="filename"></p-sortIcon></th>
@@ -46,6 +54,9 @@
                 </tr>
             </ng-template>
         </p-table>
+      <p-paginator *ngIf="nodeList" (onPageChange)="handlePagination($event)" [rows]="10" [totalRecords]="nodeList.total" [rowsPerPageOptions]="[5, 25, 50, 100]"
+                   [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      ></p-paginator>
     </div>
 
 <!--    <p-image [preview]="true" [hidden]="false" [src]="sanitizer.bypassSecurityTrustUrl(previewingContentUrl)" alt="Image" width="250"></p-image>-->

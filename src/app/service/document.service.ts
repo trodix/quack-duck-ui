@@ -4,6 +4,7 @@ import { IConfig } from '@onlyoffice/document-editor-angular';
 import {map, Observable} from 'rxjs';
 import {ContentModel, CreateNode, DNode, Property} from 'src/app/model/node';
 import { environment } from 'src/environments/environment';
+import {PaginationResult} from "../model/pagination/pagination-result";
 
 
 export interface SearchQuery {
@@ -40,8 +41,10 @@ export class DocumentService {
     return this.http.put<DNode>(`${environment.BACKEND_BASE_URL}/nodes/${node.id}/move`, { destinationId: destinationId });
   }
 
-  getNodesWithChildren(parentId: number | null): Observable<DNode[]> {
-    return this.http.get<DNode[]>(`${environment.BACKEND_BASE_URL}/nodes/${parentId}/children`);
+  getNodesWithChildren(parentId: number | null, offset: number, limit: number): Observable<PaginationResult<DNode[]>> {
+    return this.http.get<PaginationResult<DNode[]>>(`${environment.BACKEND_BASE_URL}/nodes/${parentId}/children`,
+      {params: {offset: offset, limit: limit}}
+    )
   }
 
   getNodeWithParents(nodeId: string | null): Observable<DNode> {
