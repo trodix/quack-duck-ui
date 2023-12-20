@@ -32,6 +32,7 @@ import { ImageGalleryComponent } from './components/image-gallery/image-gallery.
 import {GalleriaModule} from "primeng/galleria";
 import {ImageModule} from "primeng/image";
 import {PaginatorModule} from "primeng/paginator";
+import { SidebarComponent } from './components/sidebar/sidebar.component';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import {PaginatorModule} from "primeng/paginator";
     NodePermissionManagerComponent,
     PermissionManagerComponent,
     SearchDocumentsComponent,
-    ImageGalleryComponent
+    ImageGalleryComponent,
+    SidebarComponent
   ],
   imports: [
     BrowserModule,

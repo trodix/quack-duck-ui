@@ -1,0 +1,24 @@
+<div class="sidebar">
+  <div class="menu-container">
+    <nav class="menu">
+      <h2 class="menu-title">Documents</h2>
+      <div class="menu-items">
+        <a [routerLink]="['/']" routerLinkActive="active-link" class="menu-item"><span class=" pi pi-file"></span>Documents</a>
+        <a [routerLink]="['/calendar']" routerLinkActive="active-link" class="menu-item"><span class="pi pi-calendar"></span>Calendar</a>
+        <a [routerLink]="['/favorite']" routerLinkActive="active-link" class="menu-item"><span class="pi pi-star"></span>Favorite</a>
+      </div>
+    </nav>
+    <nav class="menu">
+      <h2 class="menu-title">Settings</h2>
+      <div class="menu-items">
+        <a [routerLink]="['/profile']" routerLinkActive="active-link" class="menu-item"><span class=" pi pi-user"></span>Profile</a>
+        <a [routerLink]="['/account']" routerLinkActive="active-link" class="menu-item"><span class="pi pi-lock"></span>Account</a>
+      </div>
+    </nav>
+  </div>
+
+  <div class="sidebar-footer">
+    <p>Version:<span>1.0.0-SNAPSHOT</span></p>
+    <a (click)="console.log('display info')" class="info"><span class="pi pi-info-circle"></span></a>
+  </div>
+</div>

@@ -1,20 +1,23 @@
 <div class="header">
-    <div>
-        <h1><a [routerLink]="[getRouteHome()]">Duckcloud</a></h1>
-    </div>
+  <div>
+      <h1><a [routerLink]="[getRouteHome()]">Duckcloud</a></h1>
+  </div>
+  <div class="right-align-container">
     <app-search-documents></app-search-documents>
     <div class="action">
-        <nav>
-            <ul>
-                <li>
-                    <a (click)="onClickMenu(menu, $event)" class="toogle-menu">
-                        <i class="pi pi-user mr-2"></i>
-                        <span>{{email}}</span>
-                        <i class="pi pi-angle-down ml-2"></i>
-                    </a>
-                    <p-menu #menu [popup]="true" [model]="items"></p-menu>
-                </li>
-            </ul>
-        </nav>
+      <nav>
+        <ul>
+          <li>
+            <a (click)="onClickMenu(menu, $event)" class="toogle-menu">
+              <i class="pi pi-user mr-2"></i>
+              <span>{{email}}</span>
+              <i class="pi pi-angle-down ml-2"></i>
+            </a>
+            <p-menu #menu [popup]="true" [model]="items"></p-menu>
+          </li>
+        </ul>
+      </nav>
     </div>
+  </div>
+
 </div>
