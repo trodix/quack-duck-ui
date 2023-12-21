@@ -46,7 +46,7 @@
                         <span>{{ node.properties | property: 'cm:name' }}</span>
                     </td>
                     <td>{{ (node.properties | property: 'cm:modifiedByDisplayName') || (node.properties | property: 'cm:createdByDisplayName') }}</td>
-                    <td>{{ ((node.properties | property: 'cm:modifiedAt') || (node.properties | property: 'cm:createdAt' )) | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+                    <td>{{ ((node.properties | property: 'cm:modifiedAt') || (node.properties | property: 'cm:createdAt' )) | date: 'medium' }}</td>
                     <td>{{ (node.properties | property: 'cm:contentSize') | size }}</td>
                     <td class="col-actions">
                         <a (click)="onClickMenu(menu, $event, node)" class="toogle-menu">...</a>
