@@ -176,7 +176,14 @@ export class DocumentListComponent implements OnInit {
               command: () => {
                 this.documentService.edit(node);
               }
-            }
+            },
+            {
+              label: 'Download',
+              icon: 'pi pi-download',
+              command: () => {
+                this.download(node);
+              }
+            },
           )
         }
         return i;
@@ -447,6 +454,20 @@ export class DocumentListComponent implements OnInit {
       });
     }
 
+  }
+
+  download(node: DNode) {
+    if (this.documentService.isNodeTypeContent(node)) {
+      console.log("Downloading document " + this.documentService.getNodeName(node));
+      this.documentService.getFileByNodeId(String(node.id)).subscribe(blob => {
+        console.log("Downloaded " + blob.size + " bytes");
+
+        const anchor = document.createElement('a');
+        anchor.download = this.documentService.getNodeName(node);
+        anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
+        anchor.click();
+      });
+    }
   }
 
 }
