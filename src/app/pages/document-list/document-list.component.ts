@@ -18,6 +18,8 @@ export class DocumentListComponent implements OnInit {
 
   nodeList: PaginationResult<DNode[]> | null = null;
 
+  pageSize: number = 50;
+
   items!: MenuItem[];
 
   menuItemsCreateDocument!: MenuItem[];
@@ -31,6 +33,8 @@ export class DocumentListComponent implements OnInit {
   renameForm!: FormGroup;
 
   displayModalCreateDirectory: boolean = false;
+
+  displayModalDelete: boolean = false;
 
   displayModalRename: boolean = false;
 
@@ -59,7 +63,7 @@ export class DocumentListComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       const currentPathNodeId = params['nodeId'] || this.ROOT_NODE;
-      this.loadDirectory(currentPathNodeId);
+      this.loadDirectory(currentPathNodeId, 0, this.pageSize);
     });
   }
 
@@ -74,6 +78,7 @@ export class DocumentListComponent implements OnInit {
   }
 
   handlePagination($event: {page: number, first: number, rows: number, pageCount: number}) {
+    this.pageSize = $event.rows;
     this.loadDirectory(this.currentNode.id, $event.page * $event.rows, $event.rows)
   }
 
@@ -145,9 +150,9 @@ export class DocumentListComponent implements OnInit {
           },
           {
             label: 'Delete',
-            icon: 'pi pi-times',
+            icon: 'pi pi-trash',
             command: () => {
-              this.delete(node);
+              this.showDialogDelete(node);
             }
           },
           {
@@ -360,16 +365,28 @@ export class DocumentListComponent implements OnInit {
     }
   }
 
-  delete(node: DNode): void {
-    this.documentService.delete(node).subscribe({
+  delete(): void {
+    this.documentService.delete(this.editingNode!).subscribe({
       complete: () => {
         this.refreshDocumentList();
+        this.closeDialogDelete();
       },
       error: (error: Error) => {
-        const nodeType = node.type == ContentModel.TYPE_DIRECTORY ? "directory" : "document";
+        const nodeType = this.editingNode?.type == ContentModel.TYPE_DIRECTORY ? "directory" : "document";
         this.messageService.add({ severity: 'error', summary: `Error while deleting the ${nodeType}. Please try again later.`, detail: error.message });
       }
     });
+  }
+
+  showDialogDelete(node: DNode): void {
+
+    this.editingNode = node;
+    this.displayModalDelete = true;
+  }
+
+  closeDialogDelete() {
+    this.displayModalDelete = false;
+    this.editingNode = null;
   }
 
   showDialogMove(node: DNode): void {

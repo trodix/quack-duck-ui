@@ -54,7 +54,7 @@
                 </tr>
             </ng-template>
         </p-table>
-      <p-paginator *ngIf="nodeList" (onPageChange)="handlePagination($event)" [rows]="10" [totalRecords]="nodeList.total" [rowsPerPageOptions]="[5, 25, 50, 100]"
+      <p-paginator *ngIf="nodeList" (onPageChange)="handlePagination($event)" [rows]="pageSize" [totalRecords]="nodeList.total" [rowsPerPageOptions]="[25, 50, 100]"
                    [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
       ></p-paginator>
     </div>
@@ -91,6 +91,16 @@
                 </div>
             </div>
         </form>
+    </p-dialog>
+
+    <p-dialog *ngIf="displayModalDelete" header="Delete confirmation" [(visible)]="displayModalDelete" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">
+      <p>Do you confirm delete <strong>{{ editingNode!.properties | property: 'cm:name' }}</strong> ?</p>
+      <div class="actions flex justify-content-end gap-2">
+        <div class="right flex align-items-end gap-2">
+          <button pButton type="button" label="No, cancel" class="p-button-secondary" icon="pi pi-times" (click)="closeDialogDelete()"></button>
+          <button pButton type="button" label="Yes, delete" class="p-button-danger" icon="pi pi-trash" (click)="delete()"></button>
+        </div>
+      </div>
     </p-dialog>
 
     <p-dialog *ngIf="renameForm" header="Rename" [(visible)]="displayModalRename" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">
