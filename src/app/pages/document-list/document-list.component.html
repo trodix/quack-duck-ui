@@ -1,5 +1,5 @@
 <div class="document-list">
-    <h1>File explorer</h1>
+    <h1 class="page-title">File explorer</h1>
 
     <p-breadcrumb [model]="pathList" [home]="home"></p-breadcrumb>
 
@@ -21,7 +21,15 @@
     </p-toolbar>
 
     <div class="card document-list-container">
-        <p-table [value]="(nodeList$ | async)!" dataKey="id" selectionMode="multiple" [metaKeySelection]="true" [scrollable]="true" scrollHeight="600px" [tableStyle]="{'min-width': '50rem'}">
+        <p-table
+          [value]="nodeList?.entries || []"
+          dataKey="id"
+          selectionMode="multiple"
+          [metaKeySelection]="true"
+          [scrollable]="true"
+          scrollHeight="600px"
+          [tableStyle]="{'min-width': '50rem'}"
+        >
             <ng-template pTemplate="header">
                 <tr>
                     <th pSortableColumn="filename">Filename <p-sortIcon field="filename"></p-sortIcon></th>
@@ -38,7 +46,7 @@
                         <span>{{ node.properties | property: 'cm:name' }}</span>
                     </td>
                     <td>{{ (node.properties | property: 'cm:modifiedByDisplayName') || (node.properties | property: 'cm:createdByDisplayName') }}</td>
-                    <td>{{ ((node.properties | property: 'cm:modifiedAt') || (node.properties | property: 'cm:createdAt' )) | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+                    <td>{{ ((node.properties | property: 'cm:modifiedAt') || (node.properties | property: 'cm:createdAt' )) | date: 'medium' }}</td>
                     <td>{{ (node.properties | property: 'cm:contentSize') | size }}</td>
                     <td class="col-actions">
                         <a (click)="onClickMenu(menu, $event, node)" class="toogle-menu">...</a>
@@ -46,9 +54,12 @@
                 </tr>
             </ng-template>
         </p-table>
+      <p-paginator *ngIf="nodeList" (onPageChange)="handlePagination($event)" [rows]="pageSize" [totalRecords]="nodeList.total" [rowsPerPageOptions]="[25, 50, 100]"
+                   [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      ></p-paginator>
     </div>
 
-<!--    <p-image [preview]="true" [hidden]="false" [src]="sanitizer.bypassSecurityTrustUrl(previewingContentUrl)" alt="Image" width="250"></p-image>-->
+    <app-image-viewer *ngIf="!!previewingContentUrl" (onClose)="previewingContentUrl = ''" [src]="sanitizer.bypassSecurityTrustUrl(previewingContentUrl)"></app-image-viewer>
 
     <p-menu #menu [popup]="true" [model]="items"></p-menu>
 
@@ -80,6 +91,16 @@
                 </div>
             </div>
         </form>
+    </p-dialog>
+
+    <p-dialog *ngIf="displayModalDelete" header="Delete confirmation" [(visible)]="displayModalDelete" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">
+      <p>Do you confirm delete <strong>{{ editingNode!.properties | property: 'cm:name' }}</strong> ?</p>
+      <div class="actions flex justify-content-end gap-2">
+        <div class="right flex align-items-end gap-2">
+          <button pButton type="button" label="No, cancel" class="p-button-secondary" icon="pi pi-times" (click)="closeDialogDelete()"></button>
+          <button pButton type="button" label="Yes, delete" class="p-button-danger" icon="pi pi-trash" (click)="delete()"></button>
+        </div>
+      </div>
     </p-dialog>
 
     <p-dialog *ngIf="renameForm" header="Rename" [(visible)]="displayModalRename" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">

@@ -1,4 +1,18 @@
-.pages-wrapper {
+.app-layout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
+  grid-gap: 0;
+  height: 100vh;
+
+  .header {
+    grid-column: 1 / 3;
+  }
+  .sidebar {
+  }
+  .pages-wrapper {
     padding: 0 16px;
- }
- 
+  }
+}
+
+

@@ -3,6 +3,7 @@ import {DNode} from 'src/app/model/node';
 import {DocumentService} from "../../service/document.service";
 import {map, Observable, tap} from "rxjs";
 import {MenuItem} from "primeng/api";
+import {PaginationResult} from "../../model/pagination/pagination-result";
 
 @Component({
   selector: 'app-tree-file-selector',
@@ -15,7 +16,7 @@ export class TreeFileSelectorComponent implements OnInit {
   @Input("actionUponNode") actionUponNode!: DNode;
   selectedDirectory: DNode | null = null;
   openedDirectory: DNode | null = null;
-  directories!: Observable<DNode[]>;
+  directories!: Observable<PaginationResult<DNode[]>>;
 
   @Output() onSelectedDirectory: EventEmitter<DNode> = new EventEmitter();
 
@@ -25,9 +26,17 @@ export class TreeFileSelectorComponent implements OnInit {
     this.loadDirectories(this.rootDirectoryId);
   }
 
-  loadDirectories(directoryId: number): Observable<DNode[]> {
-    return this.directories = this.documentService.getNodesWithChildren(directoryId).pipe(
-      map(nodes => nodes.filter(node => this.documentService.isNodeTypeDirectory(node))),
+  loadDirectories(directoryId: number): void {
+    const offset = 0;
+    const limit = 50;
+    this.directories = this.documentService.getNodesWithChildren(directoryId, offset, limit).pipe(
+      map(nodesPage =>
+        ({
+          offset: nodesPage.offset,
+          pageSize: nodesPage.pageSize,
+          total: nodesPage.total,
+          entries: nodesPage.entries.filter(node => this.documentService.isNodeTypeDirectory(node))
+        }) as PaginationResult<DNode[]>),
       tap(() => this.documentService.getNodeWithParents(String(directoryId)).subscribe(dir => this.openedDirectory = dir))
     )
   }
