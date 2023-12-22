@@ -1,26 +1,25 @@
 <div class="document-list">
-    <h1 class="page-title">File explorer</h1>
+  <h1 class="page-title">File explorer</h1>
 
-    <p-breadcrumb [model]="pathList" [home]="home"></p-breadcrumb>
+  <div class="content-wrapper">
+    <div class="document-list-area">
 
-    <p-toolbar>
+      <p-breadcrumb [model]="pathList" [home]="home"></p-breadcrumb>
+
+      <p-toolbar>
         <div class="p-toolbar-group-start">
-            <p-button icon="pi pi-folder" (onClick)="showDialogCreateDirectory()"></p-button>
+          <p-button icon="pi pi-folder" (onClick)="showDialogCreateDirectory()"></p-button>
 
-            <p-button (onClick)="onClickMenuCreateDocument(menuCreateDocument, $event)" class="toogle-menu" icon="pi pi-file"></p-button>
-            <p-menu #menuCreateDocument [popup]="true" [model]="menuItemsCreateDocument"></p-menu>
+          <p-button (onClick)="onClickMenuCreateDocument(menuCreateDocument, $event)" class="toogle-menu" icon="pi pi-file"></p-button>
+          <p-menu #menuCreateDocument [popup]="true" [model]="menuItemsCreateDocument"></p-menu>
 
-            <p-button icon="pi pi-upload" styleClass="p-button-success" (onClick)="fileinput.click()"></p-button>
-            <input #fileinput type="file" accept="*" (change)="onSelectedFile($event)" style="display:none">
+          <p-button icon="pi pi-upload" styleClass="p-button-success" (onClick)="fileinput.click()"></p-button>
+          <input #fileinput type="file" accept="*" (change)="onSelectedFile($event)" style="display:none">
         </div>
 
-<!-- TODO search documents in parent directory (currently opened) -->
-<!--        <div class="p-toolbar-group-end">-->
-<!--            <p-button icon="pi pi-search"></p-button>-->
-<!--        </div>-->
-    </p-toolbar>
+      </p-toolbar>
 
-    <div class="card document-list-container">
+      <div class="card document-list-container">
         <p-table
           [value]="nodeList?.entries || []"
           dataKey="id"
@@ -30,126 +29,139 @@
           scrollHeight="600px"
           [tableStyle]="{'min-width': '50rem'}"
         >
-            <ng-template pTemplate="header">
-                <tr>
-                    <th pSortableColumn="filename">Filename <p-sortIcon field="filename"></p-sortIcon></th>
-                    <th pSortableColumn="modifiedByName">Modified by <p-sortIcon field="modifiedByName"></p-sortIcon></th>
-                    <th pSortableColumn="modifiedAt">Modified at <p-sortIcon field="modifiedAt"></p-sortIcon></th>
-                    <th pSortableColumn="contentSize">Size <p-sortIcon field="contentSize"></p-sortIcon></th>
-                    <th>Actions</th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-node let-rowIndex="rowIndex">
-                <tr [pSelectableRow] [pSelectableRowIndex]="rowIndex" [pContextMenuRow]="node">
-                    <td class="col-filename" (click)="onNodeSelected(node)" (dblclick)="onNodeDoubleClicked(node)">
-                        <img src="{{getIcon(node)}}" alt="file icon">
-                        <span>{{ node.properties | property: 'cm:name' }}</span>
-                    </td>
-                    <td>{{ (node.properties | property: 'cm:modifiedByDisplayName') || (node.properties | property: 'cm:createdByDisplayName') }}</td>
-                    <td>{{ ((node.properties | property: 'cm:modifiedAt') || (node.properties | property: 'cm:createdAt' )) | date: 'medium' }}</td>
-                    <td>{{ (node.properties | property: 'cm:contentSize') | size }}</td>
-                    <td class="col-actions">
-                        <a (click)="onClickMenu(menu, $event, node)" class="toogle-menu">...</a>
-                    </td>
-                </tr>
-            </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="filename">Filename <p-sortIcon field="filename"></p-sortIcon></th>
+              <th pSortableColumn="modifiedByName">Modified by <p-sortIcon field="modifiedByName"></p-sortIcon></th>
+              <th pSortableColumn="modifiedAt">Modified at <p-sortIcon field="modifiedAt"></p-sortIcon></th>
+              <th pSortableColumn="contentSize">Size <p-sortIcon field="contentSize"></p-sortIcon></th>
+              <th>Actions</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-node let-rowIndex="rowIndex">
+            <tr [pSelectableRow] [pSelectableRowIndex]="rowIndex" [pContextMenuRow]="node">
+              <td class="col-filename" (click)="onNodeSelected(node)" (dblclick)="onNodeDoubleClicked(node)">
+                <img src="{{getIcon(node)}}" alt="file icon">
+                <span>{{ node.properties | property: 'cm:name' }}</span>
+              </td>
+              <td>{{ (node.properties | property: 'cm:modifiedByDisplayName') || (node.properties | property: 'cm:createdByDisplayName') }}</td>
+              <td>{{ ((node.properties | property: 'cm:modifiedAt') || (node.properties | property: 'cm:createdAt' )) | date: 'medium' }}</td>
+              <td>{{ (node.properties | property: 'cm:contentSize') | size }}</td>
+              <td class="col-actions">
+                <a (click)="onClickMenu(menu, $event, node)" class="toogle-menu">...</a>
+              </td>
+            </tr>
+          </ng-template>
         </p-table>
-      <p-paginator *ngIf="nodeList" (onPageChange)="handlePagination($event)" [rows]="pageSize" [totalRecords]="nodeList.total" [rowsPerPageOptions]="[25, 50, 100]"
-                   [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-      ></p-paginator>
+        <p-paginator *ngIf="nodeList" (onPageChange)="handlePagination($event)" [rows]="pageSize" [totalRecords]="nodeList.total" [rowsPerPageOptions]="[25, 50, 100]"
+                     [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        ></p-paginator>
+      </div>
+
     </div>
 
-    <app-image-viewer *ngIf="!!previewingContentUrl" (onClose)="previewingContentUrl = ''" [src]="sanitizer.bypassSecurityTrustUrl(previewingContentUrl)"></app-image-viewer>
+    <div class="node-properties-viewer-area">
+      <app-node-info-viewer *ngIf="editingNode" (onClose)="editingNode = null" [selectedNode]="editingNode"></app-node-info-viewer>
+    </div>
+  </div>
 
-    <p-menu #menu [popup]="true" [model]="items"></p-menu>
 
-    <p-dialog *ngIf="createDirectoryForm" header="Create a new directory" [(visible)]="displayModalCreateDirectory" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">
-        <form [formGroup]="createDirectoryForm" (ngSubmit)="createDirectory()" class="w-full">
-            <h3>Path :
-                <span *ngFor="let path of currentNode.path; let last = last;">
-                    <span>
-                        {{path.nodeName}}
-                    </span>
-                    <span *ngIf="!last">
-                        /
-                    </span>
-                </span>
-            </h3>
-            <div class="flex flex-column">
-                <div class="form-fields flex flex-column">
-                    <div class="field flex flex-column">
-                        <input type="text" pInputText formControlName="newDirectoryName"/>
-                        <small class="p-error" *ngIf="createDirectoryForm.get('newDirectoryName')?.invalid && createDirectoryForm.get('newDirectoryName')?.dirty ">Directory name is invalid</small>
-                    </div>
-                </div>
-            </div>
 
-            <div class="actions flex justify-content-end gap-2">
-                <div class="right flex align-items-end gap-2">
-                    <button pButton type="button" label="Cancel" class="p-button-secondary" icon="pi pi-times" (click)="displayModalCreateDirectory = false"></button>
-                    <button pButton type="submit" label="Create" class="p-button-primary" icon="pi pi-save" [disabled]="createDirectoryForm.invalid"></button>
-                </div>
-            </div>
-        </form>
-    </p-dialog>
 
-    <p-dialog *ngIf="displayModalDelete" header="Delete confirmation" [(visible)]="displayModalDelete" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">
-      <p>Do you confirm delete <strong>{{ editingNode!.properties | property: 'cm:name' }}</strong> ?</p>
-      <div class="actions flex justify-content-end gap-2">
-        <div class="right flex align-items-end gap-2">
-          <button pButton type="button" label="No, cancel" class="p-button-secondary" icon="pi pi-times" (click)="closeDialogDelete()"></button>
-          <button pButton type="button" label="Yes, delete" class="p-button-danger" icon="pi pi-trash" (click)="delete()"></button>
-        </div>
+
+
+
+  <app-image-viewer *ngIf="!!previewingContentUrl" (onClose)="previewingContentUrl = ''" [src]="sanitizer.bypassSecurityTrustUrl(previewingContentUrl)"></app-image-viewer>
+
+  <p-menu #menu [popup]="true" [model]="items"></p-menu>
+
+  <p-dialog *ngIf="createDirectoryForm" header="Create a new directory" [(visible)]="displayModalCreateDirectory" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">
+      <form [formGroup]="createDirectoryForm" (ngSubmit)="createDirectory()" class="w-full">
+          <h3>Path :
+              <span *ngFor="let path of currentNode.path; let last = last;">
+                  <span>
+                      {{path.nodeName}}
+                  </span>
+                  <span *ngIf="!last">
+                      /
+                  </span>
+              </span>
+          </h3>
+          <div class="flex flex-column">
+              <div class="form-fields flex flex-column">
+                  <div class="field flex flex-column">
+                      <input type="text" pInputText formControlName="newDirectoryName"/>
+                      <small class="p-error" *ngIf="createDirectoryForm.get('newDirectoryName')?.invalid && createDirectoryForm.get('newDirectoryName')?.dirty ">Directory name is invalid</small>
+                  </div>
+              </div>
+          </div>
+
+          <div class="actions flex justify-content-end gap-2">
+              <div class="right flex align-items-end gap-2">
+                  <button pButton type="button" label="Cancel" class="p-button-secondary" icon="pi pi-times" (click)="displayModalCreateDirectory = false"></button>
+                  <button pButton type="submit" label="Create" class="p-button-primary" icon="pi pi-save" [disabled]="createDirectoryForm.invalid"></button>
+              </div>
+          </div>
+      </form>
+  </p-dialog>
+
+  <p-dialog *ngIf="displayModalDelete" header="Delete confirmation" [(visible)]="displayModalDelete" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">
+    <p>Do you confirm delete <strong>{{ editingNode!.properties | property: 'cm:name' }}</strong> ?</p>
+    <div class="actions flex justify-content-end gap-2">
+      <div class="right flex align-items-end gap-2">
+        <button pButton type="button" label="No, cancel" class="p-button-secondary" icon="pi pi-times" (click)="closeDialogDelete()"></button>
+        <button pButton type="button" label="Yes, delete" class="p-button-danger" icon="pi pi-trash" (click)="delete()"></button>
       </div>
-    </p-dialog>
+    </div>
+  </p-dialog>
 
-    <p-dialog *ngIf="renameForm" header="Rename" [(visible)]="displayModalRename" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">
-        <form [formGroup]="renameForm" (ngSubmit)="rename()" class="w-full">
-            <div class="flex flex-column">
-                <div class="form-fields flex flex-column">
-                    <div class="field flex flex-column">
-                        <input type="text" pInputText formControlName="newNodeName"/>
-                        <small class="p-error" *ngIf="renameForm.get('newNodeName')?.invalid && renameForm.get('newNodeName')?.dirty ">Name is invalid</small>
-                    </div>
-                </div>
-            </div>
+  <p-dialog *ngIf="renameForm" header="Rename" [(visible)]="displayModalRename" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">
+      <form [formGroup]="renameForm" (ngSubmit)="rename()" class="w-full">
+          <div class="flex flex-column">
+              <div class="form-fields flex flex-column">
+                  <div class="field flex flex-column">
+                      <input type="text" pInputText formControlName="newNodeName"/>
+                      <small class="p-error" *ngIf="renameForm.get('newNodeName')?.invalid && renameForm.get('newNodeName')?.dirty ">Name is invalid</small>
+                  </div>
+              </div>
+          </div>
 
-            <div class="actions flex justify-content-end gap-2">
-                <div class="right flex align-items-end gap-2">
-                    <button pButton type="button" label="Cancel" class="p-button-secondary" icon="pi pi-times" (click)="closeDialogRename()"></button>
-                    <button pButton type="submit" label="Rename" class="p-button-primary" icon="pi pi-save" [disabled]="renameForm.invalid"></button>
-                </div>
-            </div>
-        </form>
-    </p-dialog>
+          <div class="actions flex justify-content-end gap-2">
+              <div class="right flex align-items-end gap-2">
+                  <button pButton type="button" label="Cancel" class="p-button-secondary" icon="pi pi-times" (click)="closeDialogRename()"></button>
+                  <button pButton type="submit" label="Rename" class="p-button-primary" icon="pi pi-save" [disabled]="renameForm.invalid"></button>
+              </div>
+          </div>
+      </form>
+  </p-dialog>
 
-    <p-dialog *ngIf="displayModalMove" header="Choose a destination" [(visible)]="displayModalMove" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">
-        <app-tree-file-selector [actionUponNode]="editingNode!" [rootDirectoryId]="ROOT_NODE" (onSelectedDirectory)="moveDestination = $event"></app-tree-file-selector>
+  <p-dialog *ngIf="displayModalMove" header="Choose a destination" [(visible)]="displayModalMove" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">
+      <app-tree-file-selector [actionUponNode]="editingNode!" [rootDirectoryId]="ROOT_NODE" (onSelectedDirectory)="moveDestination = $event"></app-tree-file-selector>
 
-        <div class="actions flex justify-content-end gap-2">
-            <div class="right flex align-items-end gap-2">
-                <button pButton type="button" label="Cancel" class="p-button-secondary" icon="pi pi-times" (click)="closeDialogMove()"></button>
-                <button pButton type="button" label="Move" class="p-button-primary" icon="pi pi-save" [disabled]="!isMoveFormValid()" (click)="moveNodeToDir()"></button>
-            </div>
-        </div>
-    </p-dialog>
+      <div class="actions flex justify-content-end gap-2">
+          <div class="right flex align-items-end gap-2">
+              <button pButton type="button" label="Cancel" class="p-button-secondary" icon="pi pi-times" (click)="closeDialogMove()"></button>
+              <button pButton type="button" label="Move" class="p-button-primary" icon="pi pi-save" [disabled]="!isMoveFormValid()" (click)="moveNodeToDir()"></button>
+          </div>
+      </div>
+  </p-dialog>
 
-    <p-dialog
-            *ngIf="displayModalAuthorization"
-            header="Manage permissions - {{editingNode?.type == 'cm:content' ? 'Document' : 'Directory'}} {{editingNode!.properties| property: 'cm:name'}}"
-            [(visible)]="displayModalAuthorization"
-            [modal]="true"
-            [style]="{width: '90vw', height: '90vh'}"
-            [draggable]="false"
-            [resizable]="false"
-            [closable]="false">
-        <app-node-permission-manager *ngIf="editingNode" [editingNode]="editingNode"></app-node-permission-manager>
+  <p-dialog
+          *ngIf="displayModalAuthorization"
+          header="Manage permissions - {{editingNode?.type == 'cm:content' ? 'Document' : 'Directory'}} {{editingNode!.properties| property: 'cm:name'}}"
+          [(visible)]="displayModalAuthorization"
+          [modal]="true"
+          [style]="{width: '90vw', height: '90vh'}"
+          [draggable]="false"
+          [resizable]="false"
+          [closable]="false">
+      <app-node-permission-manager *ngIf="editingNode" [editingNode]="editingNode"></app-node-permission-manager>
 
-        <div class="actions flex justify-content-end gap-2">
-            <div class="right flex align-items-end gap-2">
-                <button pButton type="submit" label="Close" class="p-button-primary" icon="pi pi-save" (click)="closeDialogAuthorization()"></button>
-            </div>
-        </div>
-    </p-dialog>
+      <div class="actions flex justify-content-end gap-2">
+          <div class="right flex align-items-end gap-2">
+              <button pButton type="submit" label="Close" class="p-button-primary" icon="pi pi-save" (click)="closeDialogAuthorization()"></button>
+          </div>
+      </div>
+  </p-dialog>
 
 </div>

@@ -33,6 +33,7 @@ import {ImageModule} from "primeng/image";
 import {PaginatorModule} from "primeng/paginator";
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { ImageViewerComponent } from './components/image-viewer/image-viewer.component';
+import { NodeInfoViewerComponent } from './components/node-info-viewer/node-info-viewer.component';
 
 
 @NgModule({
@@ -48,7 +49,8 @@ import { ImageViewerComponent } from './components/image-viewer/image-viewer.com
     PermissionManagerComponent,
     SearchDocumentsComponent,
     SidebarComponent,
-    ImageViewerComponent
+    ImageViewerComponent,
+    NodeInfoViewerComponent
   ],
   imports: [
     BrowserModule,

@@ -72,6 +72,7 @@ export class DocumentListComponent implements OnInit {
   }
 
   loadDirectory(directoryId: number, offset= 0, pageSize = 10) {
+    this.editingNode = null;
     this.documentService.getNodeWithParents(directoryId.toString()).subscribe(node => {
       this.currentNode = { ...node, path: node.path.filter(p => p.nodeId != this.ROOT_NODE) };
       this.documentService.getNodesWithChildren(directoryId, offset, pageSize).subscribe(data => {
@@ -269,7 +270,7 @@ export class DocumentListComponent implements OnInit {
     if (this.isNodeTypeDirectory(node)) {
       this.openDirectory(node.id);
     } else {
-      console.log("Selected node " + JSON.stringify(node));
+      this.editingNode = node;
     }
   }
 

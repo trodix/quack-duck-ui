@@ -1,0 +1,31 @@
+<div class="node-info-viewer" xmlns="http://www.w3.org/1999/html">
+  <div class="actions-bar">
+    <h2 class="title truncate">{{selectedNode!.properties | property: 'cm:name'}}</h2>
+    <div class="actions">
+      <div class="viewer-btn" (click)="onClosePropViewer()">
+        <span class="pi pi-times"></span>
+      </div>
+    </div>
+  </div>
+  <div class="area">
+    <h2 class="title">Properties</h2>
+    <div class="properties">
+        <div class="property">
+          <span class="prop-name">Document name</span>
+          <span class="prop-value">{{selectedNode!.properties | property: 'cm:name'}}</span>
+        </div>
+        <div class="property">
+          <span class="prop-name">Creation date</span>
+          <span class="prop-value">{{selectedNode!.properties | property: 'cm:createdAt' | date: 'short'}}</span>
+        </div>
+        <div class="property">
+          <span class="prop-name">Size</span>
+          <span class="prop-value">{{selectedNode!.properties | property: 'cm:contentSize' | size}}</span>
+        </div>
+        <div class="property">
+          <span class="prop-name">Owner</span>
+          <span class="prop-value">{{selectedNode!.properties | property: 'cm:createdByDisplayName'}}</span>
+        </div>
+    </div>
+  </div>
+</div>
