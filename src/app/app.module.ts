@@ -28,11 +28,11 @@ import { DropdownModule } from 'primeng/dropdown';
 import { PermissionManagerComponent } from './pages/permission-manager/permission-manager.component';
 import { SearchDocumentsComponent } from './components/search-documents/search-documents.component';
 import {AutoCompleteModule} from "primeng/autocomplete";
-import { ImageGalleryComponent } from './components/image-gallery/image-gallery.component';
 import {GalleriaModule} from "primeng/galleria";
 import {ImageModule} from "primeng/image";
 import {PaginatorModule} from "primeng/paginator";
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { ImageViewerComponent } from './components/image-viewer/image-viewer.component';
 
 
 @NgModule({
@@ -47,8 +47,8 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
     NodePermissionManagerComponent,
     PermissionManagerComponent,
     SearchDocumentsComponent,
-    ImageGalleryComponent,
-    SidebarComponent
+    SidebarComponent,
+    ImageViewerComponent
   ],
   imports: [
     BrowserModule,

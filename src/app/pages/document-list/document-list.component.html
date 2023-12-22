@@ -59,7 +59,7 @@
       ></p-paginator>
     </div>
 
-<!--    <p-image [preview]="true" [hidden]="false" [src]="sanitizer.bypassSecurityTrustUrl(previewingContentUrl)" alt="Image" width="250"></p-image>-->
+    <app-image-viewer *ngIf="!!previewingContentUrl" (onClose)="previewingContentUrl = ''" [src]="sanitizer.bypassSecurityTrustUrl(previewingContentUrl)"></app-image-viewer>
 
     <p-menu #menu [popup]="true" [model]="items"></p-menu>
 

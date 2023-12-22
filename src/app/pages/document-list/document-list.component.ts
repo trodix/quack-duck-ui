@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MenuItem, MessageService} from 'primeng/api';
@@ -6,6 +6,8 @@ import {ContentModel, DNode} from 'src/app/model/node';
 import {DocumentService} from 'src/app/service/document.service';
 import {DomSanitizer} from "@angular/platform-browser";
 import {PaginationResult} from "../../model/pagination/pagination-result";
+import {Image} from "primeng/image";
+import {DomHandler} from "primeng/dom";
 
 @Component({
   selector: 'app-document-list',
@@ -50,6 +52,8 @@ export class DocumentListComponent implements OnInit {
 
   previewingContentUrl: string = "";
 
+  @ViewChild('previewImg') previewImgRef!: Image;
+
   moveDestination: DNode | null = null;
 
   constructor(
@@ -91,13 +95,14 @@ export class DocumentListComponent implements OnInit {
     if (this.isOnlyOfficeSupported(node)) {
       this.documentService.edit(node);
     }
-    // else {
-    //   this.previewingNode = node;
-    //   this.documentService.getFileByNodeId(String(this.previewingNode?.id)).subscribe(data => {
-    //     const objectURL = URL.createObjectURL(data);
-    //     this.previewingContentUrl = objectURL;
-    //   });
-    // }
+    else {
+      this.previewingNode = node;
+      this.documentService.getFileByNodeId(String(this.previewingNode?.id)).subscribe(data => {
+        const objectURL = URL.createObjectURL(data);
+        this.previewingContentUrl = objectURL;
+        console.log(this.previewImgRef)
+      });
+    }
 
   }
 

@@ -1,0 +1,18 @@
+<div class="overlay">
+  <div class="actions-bar">
+    <div class="actions">
+      <div class="viewer-btn" (click)="rotateLeft()">
+        <span class="pi pi-replay"></span>
+      </div>
+      <div class="viewer-btn" (click)="rotateRight()">
+        <span class="pi pi-refresh"></span>
+      </div>
+      <div class="viewer-btn" (click)="onClosePreview()">
+        <span class="pi pi-times"></span>
+      </div>
+    </div>
+  </div>
+  <div class="img-container">
+    <img #imgRef [src]="src" alt="img" [style.transform]="'rotate('+rotationDeg+'deg)'">
+  </div>
+</div>
