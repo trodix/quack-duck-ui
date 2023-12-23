@@ -7,7 +7,13 @@
                   placeholder="Search a document"
   >
     <ng-template let-entry pTemplate="item">
-      {{getSuggestionsLabels(entry)}}
+      <div class="search-entry">
+        <div class="search-entry-row">
+          <i class="pi" [class]="getSuggestionsLabels(entry).icon"></i>
+          <span class="name">{{getSuggestionsLabels(entry).name}}</span>
+        </div>
+        <a (click)="openDirectory(entry.id)" class="path">{{entry.path}}</a>
+      </div>
     </ng-template>
   </p-autoComplete>
 </div>

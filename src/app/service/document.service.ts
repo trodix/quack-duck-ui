@@ -13,16 +13,17 @@ export interface SearchQuery {
 }
 
 export interface SearchResult {
-  resultCount: number
-  items: SearchResultEntry[]
+  resultCount: number;
+  items: SearchResultEntry[];
 }
 
 export interface SearchResultEntry {
-  dbId: number
-  type: string
-  tags: string[]
-  properties: Property[]
-  filecontent: string
+  dbId: number;
+  type: string;
+  path: string;
+  tags: string[];
+  properties: Property[];
+  filecontent: string;
 }
 
 @Injectable({
@@ -160,7 +161,7 @@ export class DocumentService {
   }
 
   search(query: SearchQuery): Observable<SearchResult> {
-    return this.http.post<SearchResult>(`${environment.BACKEND_BASE_URL}/search`, query);
+    return this.http.post<SearchResult>(`${environment.BACKEND_BASE_URL}/search`, query, {params: { limit: 10 }});
   }
 
 

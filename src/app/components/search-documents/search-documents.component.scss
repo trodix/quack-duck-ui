@@ -1,0 +1,24 @@
+.search-entry {
+  display: flex;
+  flex-direction: column;
+
+  max-width: 300px;
+
+  .search-entry-row {
+    i.pi-folder {
+      color: rgba(255, 196, 0, 0.87);
+    }
+    i.pi-file {
+      color: rgba(0, 113, 255, 0.87);
+    }
+  }
+
+  .name {
+    margin: 0 4px;
+    //max-width: 150px;
+  }
+  .path {
+    color: #797878;
+    font-size: 0.8em;
+  }
+}

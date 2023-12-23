@@ -12,7 +12,7 @@ export class SearchDocumentsComponent implements OnInit {
   matchingQueryDocuments: SearchResult | null = null;
   selectedItem = null;
 
-  constructor(readonly documentService: DocumentService, readonly route: Router){ }
+  constructor(readonly documentService: DocumentService, readonly router: Router){ }
 
   ngOnInit(): void {
   }
@@ -24,15 +24,23 @@ export class SearchDocumentsComponent implements OnInit {
     });
   }
 
-  getSuggestionsLabels(entry: SearchResultEntry): string {
-    return entry.properties['cm:name'];
+  getSuggestionsLabels(entry: SearchResultEntry): {name: string, icon: string} {
+    return { name: entry.properties['cm:name'], icon: entry.type == "cm:directory" ? "pi-folder" : "pi-file" };
   }
 
   onSelect(selectedNodeEntry: SearchResultEntry) {
     this.selectedItem = null;
     this.documentService.getNodeWithParents(String(selectedNodeEntry.dbId)).subscribe(selectedNode => {
-      this.documentService.edit(selectedNode);
+      if (this.documentService.isNodeTypeDirectory(selectedNode)) {
+        this.openDirectory(selectedNode.id);
+      } else {
+        this.openDirectory(selectedNode.parentId);
+      }
     });
+  }
+
+  openDirectory(nodeId: number): void {
+    this.router.navigate(['/'], { queryParams: { nodeId: nodeId }, queryParamsHandling: 'merge' });
   }
 
 }

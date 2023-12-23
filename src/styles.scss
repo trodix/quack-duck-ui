@@ -23,3 +23,10 @@ a[type="button"] {
   align-self: flex-start;
   font-size: 1.7em;
 }
+
+.truncate {
+  width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

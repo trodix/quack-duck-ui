@@ -7,7 +7,6 @@ import {DocumentService} from 'src/app/service/document.service';
 import {DomSanitizer} from "@angular/platform-browser";
 import {PaginationResult} from "../../model/pagination/pagination-result";
 import {Image} from "primeng/image";
-import {DomHandler} from "primeng/dom";
 
 @Component({
   selector: 'app-document-list',
