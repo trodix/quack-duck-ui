@@ -4,7 +4,7 @@ export const environment = {
   ONLYOFFICE_BASE_URL: 'https://onlyoffice.trodix.com',
   keycloak: {
     // Url of the Identity Provider
-    issuer: 'https://auth.trodix.com/realms/market',
+    issuer: 'https://auth.trodix.com/realms/duckcloud',
 
     // URL of the SPA to redirect the user to after login
     redirectUri: 'https://ged.trodix.com/',
