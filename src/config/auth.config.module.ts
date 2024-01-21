@@ -3,16 +3,16 @@ import { HttpClientModule } from '@angular/common/http';
 import { OAuthModule, AuthConfig } from 'angular-oauth2-oidc';
 
 import { AuthConfigService } from './auth-config.service';
-import { authConfig, OAuthModuleConfig } from './auth.config';
-import { environment } from 'src/environments/environment';
+import { OAuthModuleConfig } from './auth.config';
+import {AppConfigService} from "../app/app.config.service";
 
 export function init_app(authConfigService: AuthConfigService) {
     return () => authConfigService.initAuth();
 }
 
 @NgModule({
-  imports: [ 
-    HttpClientModule, 
+  imports: [
+    HttpClientModule,
     OAuthModule.forRoot({
       resourceServer: {
         // To send the jwt to the backend server when matching this url
@@ -25,10 +25,10 @@ export function init_app(authConfigService: AuthConfigService) {
     AuthConfigService,
     { provide: AuthConfig, useValue: authConfig },
     OAuthModuleConfig,
-    { 
-      provide: APP_INITIALIZER, 
-      useFactory: init_app, 
-      deps: [ AuthConfigService ], 
+    {
+      provide: APP_INITIALIZER,
+      useFactory: init_app,
+      deps: [ AuthConfigService, AppConfigService ],
       multi: true
     }
   ]

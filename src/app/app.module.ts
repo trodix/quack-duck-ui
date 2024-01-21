@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -34,7 +34,13 @@ import {PaginatorModule} from "primeng/paginator";
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { ImageViewerComponent } from './components/image-viewer/image-viewer.component';
 import { NodeInfoViewerComponent } from './components/node-info-viewer/node-info-viewer.component';
+import {AppConfigService} from "./app.config.service";
 
+const appInitializerFn = (appConfig: AppConfigService) => {
+  return () => {
+    return appConfig.loadAppConfig();
+  }
+};
 
 @NgModule({
   declarations: [
@@ -76,6 +82,13 @@ import { NodeInfoViewerComponent } from './components/node-info-viewer/node-info
     PaginatorModule
   ],
   providers: [
+    AppConfigService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: appInitializerFn,
+      multi: true,
+      deps: [AppConfigService]
+    },
     MessageService
   ],
   bootstrap: [AppComponent]

@@ -1,0 +1,14 @@
+{
+  "BACKEND_BASE_URL": "http://trodix.local:8010/api/v1",
+  "ONLYOFFICE_BASE_URL": "http://trodix.local:6080",
+  "keycloak": {
+    "issuer": "http://trodix.local:8080/realms/market",
+    "redirectUri": "http://localhost:4200/",
+    "clientId": "quack-duck-ecm-ui",
+    "responseType": "code",
+    "scope": "openid profile email",
+    "requireHttps": false,
+    "showDebugInformation": true,
+    "disableAtHashCheck": true
+  }
+}
