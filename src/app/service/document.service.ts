@@ -1,10 +1,11 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { IConfig } from '@onlyoffice/document-editor-angular';
-import {map, Observable} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {IConfig} from '@onlyoffice/document-editor-angular';
+import {Observable, Subject} from 'rxjs';
 import {ContentModel, CreateNode, DNode, Property} from 'src/app/model/node';
-import { environment } from 'src/environments/environment';
+import {environment} from 'src/environments/environment';
 import {PaginationResult} from "../model/pagination/pagination-result";
+import {TreeNode} from "primeng/api";
 import {ContentVersion} from "../model/content-version";
 
 
@@ -31,6 +32,8 @@ export interface SearchResultEntry {
   providedIn: 'root'
 })
 export class DocumentService {
+
+  onSelectedNodeFromSideBar: Subject<DNode> = new Subject<DNode>();
 
   constructor(private http: HttpClient) { }
 
@@ -173,6 +176,18 @@ export class DocumentService {
     return this.http.post<SearchResult>(`${environment.BACKEND_BASE_URL}/search`, query, {params: { limit: 10 }});
   }
 
+  getDirectoryTree(nodeId: number): Observable<DNode[]> {
+    return this.http.get<DNode[]>(`${environment.BACKEND_BASE_URL}/nodes/tree/${nodeId}`, {params: { nodeLevel: 0 }});
+  }
 
+  buildTreeComponentData(data: DNode[]): TreeNode[] {
+    return data.map(node => ({
+      label: this.getNodeName(node),
+      data: node,
+      expandedIcon: "pi pi-folder-open",
+      collapsedIcon: "pi pi-folder",
+      children: this.buildTreeComponentData(node.children.filter(c => c.type === ContentModel.TYPE_DIRECTORY))
+    }));
+  }
 
 }

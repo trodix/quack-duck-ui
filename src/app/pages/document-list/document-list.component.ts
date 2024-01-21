@@ -73,6 +73,9 @@ export class DocumentListComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       const currentPathNodeId = params['nodeId'] || this.ROOT_NODE;
       this.loadDirectory(currentPathNodeId, 0, this.pageSize);
+      this.documentService.onSelectedNodeFromSideBar.subscribe(selectedNode => {
+        this.onNodeSelected(selectedNode);
+      })
     });
   }
 

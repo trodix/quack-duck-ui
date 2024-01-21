@@ -35,6 +35,8 @@ import {SidebarComponent} from './components/sidebar/sidebar.component';
 import {ImageViewerComponent} from './components/image-viewer/image-viewer.component';
 import {NodeInfoViewerComponent} from './components/node-info-viewer/node-info-viewer.component';
 import {ChipModule} from "primeng/chip";
+import {TreeModule} from "primeng/tree";
+import {TreeViewComponent} from "./components/tree-view/tree-view.component";
 
 
 @NgModule({
@@ -51,7 +53,8 @@ import {ChipModule} from "primeng/chip";
     SearchDocumentsComponent,
     SidebarComponent,
     ImageViewerComponent,
-    NodeInfoViewerComponent
+    NodeInfoViewerComponent,
+    TreeViewComponent
   ],
   imports: [
     BrowserModule,
@@ -75,7 +78,9 @@ import {ChipModule} from "primeng/chip";
     GalleriaModule,
     ImageModule,
     PaginatorModule,
-    ChipModule
+    ChipModule,
+    PaginatorModule,
+    TreeModule
   ],
   providers: [
     MessageService
