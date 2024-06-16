@@ -5,8 +5,14 @@
   <div class="right-align-container">
     <app-search-documents></app-search-documents>
     <div class="action">
+
       <nav>
+
         <ul>
+          <li>
+            <i class="pi pi-bell mr-2"></i>
+            <span>{{notifications.length}}</span>
+          </li>
           <li>
             <a (click)="onClickMenu(menu, $event)" class="toogle-menu">
               <i class="pi pi-user mr-2"></i>
