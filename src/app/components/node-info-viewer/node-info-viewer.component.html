@@ -18,9 +18,17 @@
           <span class="prop-name">Creation date</span>
           <span class="prop-value">{{selectedNode!.properties | property: 'cm:createdAt' | date: 'short'}}</span>
         </div>
+      <div class="property">
+        <span class="prop-name">Content location</span>
+        <span class="prop-value">{{selectedNode!.properties | property: 'cm:contentLocation'}}</span>
+      </div>
         <div class="property">
           <span class="prop-name">Size</span>
           <span class="prop-value">{{selectedNode!.properties | property: 'cm:contentSize' | size}}</span>
+        </div>
+        <div class="property">
+          <span class="prop-name">Version</span>
+          <span class="prop-value">{{selectedNode!.properties | property: 'cm:contentVersion'}}</span>
         </div>
         <div class="property">
           <span class="prop-name">Owner</span>

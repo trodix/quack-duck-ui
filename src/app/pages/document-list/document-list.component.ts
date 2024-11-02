@@ -7,6 +7,8 @@ import {DocumentService} from 'src/app/service/document.service';
 import {DomSanitizer} from "@angular/platform-browser";
 import {PaginationResult} from "../../model/pagination/pagination-result";
 import {Image} from "primeng/image";
+import {Observable} from "rxjs";
+import {ContentVersion} from "../../model/content-version";
 
 @Component({
   selector: 'app-document-list',
@@ -35,6 +37,8 @@ export class DocumentListComponent implements OnInit {
 
   displayModalCreateDirectory: boolean = false;
 
+  displayModalRestoreVersion: boolean = false;
+
   displayModalDelete: boolean = false;
 
   displayModalRename: boolean = false;
@@ -46,6 +50,8 @@ export class DocumentListComponent implements OnInit {
   currentNode!: DNode;
 
   editingNode: DNode | null = null;
+
+  selectedNodeVersions$: Observable<ContentVersion[]> | undefined;
 
   previewingNode: DNode | null = null;
 
@@ -151,6 +157,13 @@ export class DocumentListComponent implements OnInit {
             icon: 'pi pi-refresh',
             command: () => {
               this.showDialogRename(node);
+            }
+          },
+          {
+            label: 'Restore a version',
+            icon: 'pi pi-arrow-right-arrow-left',
+            command: () => {
+              this.showDialogRestoreVersion(node);
             }
           },
           {
@@ -390,6 +403,35 @@ export class DocumentListComponent implements OnInit {
     });
   }
 
+  showDialogRestoreVersion(node: DNode): void {
+    this.selectedNodeVersions$ = this.documentService.getVersionsForNode(node);
+    this.editingNode = node;
+    this.displayModalRestoreVersion = true;
+  }
+
+  closeDialogRestoreVersion() {
+    this.selectedNodeVersions$ = undefined;
+    this.displayModalRestoreVersion = false;
+    this.editingNode = null;
+  }
+
+  restoreContentVersion(contentVersion: number): void {
+    this.documentService.restoreContentVersion(this.editingNode!, contentVersion).subscribe({
+      complete: () => {
+        this.refreshDocumentList();
+        this.closeDialogRestoreVersion();
+        this.messageService.add({ severity: 'success', summary: `Version ${contentVersion} restored.`});
+      },
+      error: (error: Error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: `Error while restoring version ${contentVersion} for document ${this.documentService.getNodeName(this.editingNode!)}. Please try again later.`,
+          detail: error.message
+        });
+      }
+    });
+  }
+
   showDialogDelete(node: DNode): void {
 
     this.editingNode = node;
@@ -475,4 +517,5 @@ export class DocumentListComponent implements OnInit {
     }
   }
 
+  protected readonly Number = Number;
 }

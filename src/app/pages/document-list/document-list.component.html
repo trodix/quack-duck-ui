@@ -42,7 +42,9 @@
             <tr [pSelectableRow] [pSelectableRowIndex]="rowIndex" [pContextMenuRow]="node">
               <td class="col-filename" (click)="onNodeSelected(node)" (dblclick)="onNodeDoubleClicked(node)">
                 <img src="{{getIcon(node)}}" alt="file icon">
-                <span>{{ node.properties | property: 'cm:name' }}</span>
+                <span>{{ node.properties | property: 'cm:name' }}
+                  <p-chip *ngIf="Number(node.properties | property: 'cm:contentVersion') > 1" [label]="'v' + (node.properties | property: 'cm:contentVersion')!"></p-chip>
+                </span>
               </td>
               <td>{{ (node.properties | property: 'cm:modifiedByDisplayName') || (node.properties | property: 'cm:createdByDisplayName') }}</td>
               <td>{{ ((node.properties | property: 'cm:modifiedAt') || (node.properties | property: 'cm:createdAt' )) | date: 'medium' }}</td>
@@ -133,6 +135,40 @@
               </div>
           </div>
       </form>
+  </p-dialog>
+
+  <p-dialog *ngIf="displayModalRestoreVersion" header="Restore a version" [(visible)]="displayModalRestoreVersion" [modal]="true" [style]="{width: '40vw'}" [draggable]="false" [resizable]="false" [closable]="false">
+    <div class="w-full">
+      <div class="flex flex-column">
+
+        <p-table [value]="(selectedNodeVersions$ | async)!">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Version</th>
+              <th>Date of version</th>
+<!--              <th>Author</th>-->
+              <th></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-version>
+            <tr>
+              <td>{{version.contentVersion}}<span *ngIf="version.contentVersion == Number((editingNode!.properties | property: 'cm:contentVersion'))"> (current)</span></td>
+              <td>{{version.createdAt | date: 'medium'}}</td>
+<!--              <td>{{version.createdBy}}</td>-->
+              <td>
+                <button *ngIf="version.contentVersion != Number((editingNode!.properties | property: 'cm:contentVersion'))" pButton type="submit" label="Restore" class="p-button-primary" icon="pi pi-arrow-right-arrow-left" (click)="restoreContentVersion(version.contentVersion)"></button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+
+      <div class="actions flex justify-content-end gap-2">
+        <div class="right flex align-items-end gap-2">
+          <button pButton type="button" label="Cancel" class="p-button-secondary" icon="pi pi-times" (click)="closeDialogRestoreVersion()"></button>
+        </div>
+      </div>
+    </div>
   </p-dialog>
 
   <p-dialog *ngIf="displayModalMove" header="Choose a destination" [(visible)]="displayModalMove" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">

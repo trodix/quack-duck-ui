@@ -5,6 +5,7 @@ import {map, Observable} from 'rxjs';
 import {ContentModel, CreateNode, DNode, Property} from 'src/app/model/node';
 import { environment } from 'src/environments/environment';
 import {PaginationResult} from "../model/pagination/pagination-result";
+import {ContentVersion} from "../model/content-version";
 
 
 export interface SearchQuery {
@@ -158,6 +159,14 @@ export class DocumentService {
       }
     }
     return null;
+  }
+
+  getVersionsForNode(node: DNode): Observable<ContentVersion[]> {
+    return this.http.get<ContentVersion[]>(`${environment.BACKEND_BASE_URL}/storage/nodes/${node.id}/versions`);
+  }
+
+  restoreContentVersion(node: DNode, contentVersion: number): Observable<void> {
+    return this.http.post<void>(`${environment.BACKEND_BASE_URL}/storage/nodes/${node.id}/versions/${contentVersion}`, {});
   }
 
   search(query: SearchQuery): Observable<SearchResult> {
