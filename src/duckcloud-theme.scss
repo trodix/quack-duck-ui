@@ -74,8 +74,8 @@ $secondary-dark-color: #d55826;
 }
 
 .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
-  background: $primary-color;
-  color: $theme-palette-color-8;
+  background: $primary-light-color;
+  color: $primary-color;
 }
 
 .p-link:focus {
