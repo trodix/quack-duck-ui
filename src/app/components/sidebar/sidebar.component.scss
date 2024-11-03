@@ -1,3 +1,5 @@
+@import '../../../duckcloud-theme';
+
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -7,9 +9,9 @@
   width: 250px;
   height: 100%;
 
-  background-color: #fafafa;
-  border-right: 1px solid #d7d7d7;
-  border-radius: 5px;
+  background-color: $theme-palette-color-8;
+  border-right: 1px solid $theme-palette-color-6;
+  box-shadow: 0 5px 20px 0 rgba(21, 27 , 38, .08);
 
   .menu-container {
 
@@ -22,8 +24,6 @@
 
 
       margin-top: 8px;
-
-      border-bottom: solid 1px #c1c1c1;
 
       .menu-title {
         margin-left: 12px
@@ -40,10 +40,8 @@
           height: 40px;
           padding: 8px 0px 8px 16px;
 
-          border-radius: 5px;
-
           &.active-link, &:hover {
-            background-color: #eff5ff;
+            background-color: $theme-palette-color-6;
           }
 
           text-decoration: none;
@@ -66,11 +64,11 @@
     justify-content: space-between;
     padding: 0 16px;
     width: 100%;
-    border-top: solid 1px #c1c1c1;
+    border-top: solid 1px $theme-palette-color-6;
 
     font-size: 0.8em;
 
-    background-color: #f0f0f0;
+    background-color: $theme-palette-color-5;
     p > span {
       margin: 0 3px;
     }

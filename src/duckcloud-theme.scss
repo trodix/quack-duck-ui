@@ -1,0 +1,112 @@
+$theme-palette-color-1: #e86028;
+$theme-palette-color-2: #48BABA;
+$theme-palette-color-3: #003315;
+$theme-palette-color-4: #020303;
+$theme-palette-color-5: #e1e8ed;
+$theme-palette-color-6: #f2f5f7;
+$theme-palette-color-7: #FAFBFC;
+$theme-palette-color-8: #ffffff;
+
+$primary-color: $theme-palette-color-2;
+$primary-light-color: #EEFAFFFF;
+$primary-dark-color: #40a5a5;
+
+$secondary-color: $theme-palette-color-1;
+$secondary-dark-color: #d55826;
+
+.p-button {
+  border-radius: 2px;
+  border: 1px solid $primary-color;
+  background: $primary-color;
+}
+
+.p-button:enabled:hover {
+  background: $primary-dark-color;
+  border-color: $primary-dark-color;
+}
+
+.p-button:enabled:focus {
+  box-shadow: none;
+}
+
+.p-button.p-button-success {
+  border: 1px solid $secondary-color;
+  background: $secondary-color;
+}
+
+.p-button.p-button-success:enabled:hover {
+  background: $secondary-dark-color;
+  border-color: $secondary-dark-color;
+}
+
+.p-button.p-button-success:enabled:focus {
+  box-shadow: none;
+}
+
+.p-tree {
+  border: 0px;
+  background: $theme-palette-color-8;
+  color: $theme-palette-color-3;
+  padding: 0;
+  border-radius: 0;
+  .p-tree-container {
+    .p-treenode {
+      padding: 0;
+      .p-treenode-content {
+        padding: 0;
+        border-radius: 0;
+        .p-tree-toggler:focus {
+          box-shadow: none;
+        }
+      }
+      .p-treenode-content:focus {
+        box-shadow: none;
+      }
+      .p-treenode-content.p-treenode-selectable:not(.p-highlight):hover {
+        background: $theme-palette-color-7;
+      }
+    }
+  }
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page {
+  border-radius: 2px;
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background: $primary-color;
+  color: $theme-palette-color-8;
+}
+
+.p-link:focus {
+  box-shadow: none;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+  color: $primary-color;
+  background: $primary-light-color;
+}
+
+.p-inputtext:enabled:hover {
+  border-color: $primary-color;
+}
+
+.p-inputtext:enabled:focus {
+  border-color: $primary-color;
+  box-shadow: none;
+}
+
+.p-chip {
+  border-radius: 5px;
+  padding: 0 6px;
+  .p-chip-text {
+    margin: 0;
+    font-size: 0.9em;
+  }
+}
+
+
+
+
+
+

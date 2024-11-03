@@ -1,5 +1,7 @@
+@import '../../../duckcloud-theme';
+
 .header {
-    background-color: #38388c;
+    background-color: $primary-color;
     height: 60px;
     display: flex;
     align-items: center;
