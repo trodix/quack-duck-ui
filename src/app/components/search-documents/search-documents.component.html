@@ -1,9 +1,13 @@
 <div class="search-documents">
+  <div class="search-before">
+    <i class="pi pi-search"></i>
+  </div>
   <p-autoComplete
                   [(ngModel)]="selectedItem"
                   [suggestions]="matchingQueryDocuments?.items || []"
                   (completeMethod)="searchDocuments($event)"
                   (onSelect)="onSelect($event)"
+                  (onBlur)="clear()"
                   placeholder="Search a document"
   >
     <ng-template let-entry pTemplate="item">
@@ -16,4 +20,7 @@
       </div>
     </ng-template>
   </p-autoComplete>
+  <div class="search-after" (click)="clear()">
+    <i class="pi pi-times"></i>
+  </div>
 </div>

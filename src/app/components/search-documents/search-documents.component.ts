@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewRef} from '@angular/core';
 import {DocumentService, SearchResult, SearchResultEntry} from "../../service/document.service";
 import {Router} from "@angular/router";
 
@@ -41,6 +41,10 @@ export class SearchDocumentsComponent implements OnInit {
 
   openDirectory(nodeId: number): void {
     this.router.navigate(['/'], { queryParams: { nodeId: nodeId }, queryParamsHandling: 'merge' });
+  }
+
+  clear() {
+    this.selectedItem = null;
   }
 
 }

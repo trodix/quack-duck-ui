@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {DNode} from "../../model/node";
+import {DocumentService} from "../../service/document.service";
 
 @Component({
   selector: 'app-node-info-viewer',
@@ -11,7 +12,7 @@ export class NodeInfoViewerComponent implements OnInit {
   @Input() selectedNode!: DNode | null;
   @Output() onClose = new EventEmitter<void>();
 
-  constructor() { }
+  constructor(private readonly documentService: DocumentService) { }
 
   ngOnInit(): void {
 
@@ -19,6 +20,10 @@ export class NodeInfoViewerComponent implements OnInit {
 
   onClosePropViewer() {
     this.onClose.emit();
+  }
+
+  getIcon(node: DNode): string {
+    return this.documentService.getIcon(node);
   }
 
 }

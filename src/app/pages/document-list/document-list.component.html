@@ -1,9 +1,9 @@
 <div class="document-list">
-  <h1 class="page-title">File explorer</h1>
 
   <div class="content-wrapper">
     <div class="document-list-area">
 
+      <h1 class="page-title">File explorer</h1>
       <p-breadcrumb [model]="pathList" [home]="home"></p-breadcrumb>
 
       <p-toolbar>
@@ -19,7 +19,7 @@
 
       </p-toolbar>
 
-      <div class="card document-list-container">
+      <div class="document-list-container">
         <p-table
           [value]="nodeList?.entries || []"
           dataKey="id"

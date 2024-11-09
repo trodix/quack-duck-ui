@@ -2,10 +2,9 @@ $theme-palette-color-1: #e86028;
 $theme-palette-color-2: #48BABA;
 $theme-palette-color-3: #003315;
 $theme-palette-color-4: #020303;
-$theme-palette-color-5: #e1e8ed;
-$theme-palette-color-6: #f2f5f7;
-$theme-palette-color-7: #FAFBFC;
-$theme-palette-color-8: #ffffff;
+$theme-palette-color-5: #a2acae;
+$theme-palette-color-6: #f5f5f5;
+$theme-palette-color-7: #ffffff;
 
 $primary-color: $theme-palette-color-2;
 $primary-light-color: #EEFAFFFF;
@@ -45,7 +44,7 @@ $secondary-dark-color: #d55826;
 
 .p-tree {
   border: 0px;
-  background: $theme-palette-color-8;
+  background: $theme-palette-color-7;
   color: $theme-palette-color-3;
   padding: 0;
   border-radius: 0;
@@ -55,6 +54,9 @@ $secondary-dark-color: #d55826;
       .p-treenode-content {
         padding: 0;
         border-radius: 0;
+        .p-tree-toggler-icon {
+          font-size: 0.7em;
+        }
         .p-tree-toggler:focus {
           box-shadow: none;
         }
@@ -63,7 +65,7 @@ $secondary-dark-color: #d55826;
         box-shadow: none;
       }
       .p-treenode-content.p-treenode-selectable:not(.p-highlight):hover {
-        background: $theme-palette-color-7;
+        background: $theme-palette-color-6;
       }
     }
   }
@@ -103,6 +105,25 @@ $secondary-dark-color: #d55826;
     margin: 0;
     font-size: 0.9em;
   }
+}
+
+.p-breadcrumb {
+  border: none;
+}
+
+.p-toolbar {
+  background: $theme-palette-color-7;
+  border: none;
+  padding: 12px;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+  padding: 0.5rem;
+}
+
+.p-datatable .p-datatable-tbody > tr:focus {
+  outline: none;
+  background: $theme-palette-color-6;
 }
 
 

@@ -9,7 +9,13 @@ html, body {
     padding: 0;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     overflow: hidden;
-    background-color: $theme-palette-color-7;
+    background-color: $theme-palette-color-6;
+}
+
+.card {
+  background: $theme-palette-color-7;
+  margin: 16px 0;
+  border-radius: 4px;
 }
 
 a[type="button"] {

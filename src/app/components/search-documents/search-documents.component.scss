@@ -1,8 +1,57 @@
+@import '../../../duckcloud-theme';
+
+.search-documents {
+
+  display: flex;
+  align-items: center;
+
+  background: #FFFFFF4C;
+  border-radius: 5px;
+  &:focus-within {
+    border: 1px solid rgba(255, 255, 255, 0.60);
+  }
+
+  .search-before, .search-after {
+    display: flex;
+    height: 100%;
+  }
+
+  .search-before {
+    border-radius: 5px 0 0 5px;
+    padding-left: 8px;
+  }
+
+  .search-after {
+    border-radius: 0 5px 5px 0;
+    padding-right: 8px;
+    cursor: pointer;
+  }
+
+  ::ng-deep {
+    .p-autocomplete {
+      .p-inputtext {
+        width: 400px;
+        background: none;
+        border: none;
+        border-radius: 0;
+        color:  $theme-palette-color-7;
+        &::placeholder {
+          color:  $theme-palette-color-7;
+        }
+      }
+      .p-autocomplete-panel {
+        left: -26px !important;
+        max-height: 300px !important;
+      }
+    }
+  }
+}
+
 .search-entry {
   display: flex;
   flex-direction: column;
 
-  max-width: 300px;
+  width: 400px;
 
   .search-entry-row {
     i.pi-folder {

@@ -296,28 +296,7 @@ export class DocumentListComponent implements OnInit {
   }
 
   getIcon(node: DNode): string {
-    if (this.isNodeTypeContent(node)) {
-      switch (this.documentService.getOnlyOfficeDocumentType(node)) {
-        case "word":
-          if (this.documentService.getNodeName(node).endsWith('.pdf')) {
-            return "/assets/img/office/pdf-icon.svg";
-          } else {
-            return "/assets/img/office/word-icon.svg";
-          }
-        case "cell":
-          return "/assets/img/office/excel-icon.svg";
-        case "slide":
-          return "/assets/img/office/powerpoint-icon.svg";
-        default:
-          // unknown content type document
-          return "/assets/img/unknown_file-icon.svg";
-      }
-    } else if (this.isNodeTypeDirectory(node)) {
-      return "/assets/img/directory_closed-icon.svg";
-    }
-
-    // if not content type and not directory
-    return "/assets/img/unknown_file-icon.svg";
+    return this.documentService.getIcon(node);
   }
 
   isOnlyOfficeSupported(node: DNode): boolean {

@@ -1,6 +1,6 @@
 <div class="node-info-viewer" xmlns="http://www.w3.org/1999/html">
   <div class="actions-bar">
-    <h2 class="title truncate">{{selectedNode!.properties | property: 'cm:name'}}</h2>
+    <h2 class="document-name truncate"><img src="{{getIcon(selectedNode!)}}" alt="file icon">{{selectedNode!.properties | property: 'cm:name'}}</h2>
     <div class="actions">
       <div class="viewer-btn" (click)="onClosePropViewer()">
         <span class="pi pi-times"></span>
