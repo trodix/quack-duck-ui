@@ -15,31 +15,46 @@ $secondary-dark-color: #d55826;
 
 .p-button {
   border-radius: 2px;
+}
+
+.p-button.p-button:enabled:focus {
+  box-shadow: none;
+}
+
+// PRIMARY
+
+.p-button.p-button-primary {
   border: 1px solid $primary-color;
   background: $primary-color;
 }
 
-.p-button:enabled:hover {
+.p-button-primary.p-button:enabled:hover {
   background: $primary-dark-color;
   border-color: $primary-dark-color;
 }
 
-.p-button:enabled:focus {
-  box-shadow: none;
-}
+// SECONDARY
 
-.p-button.p-button-success {
+.p-button.p-button-secondary {
   border: 1px solid $secondary-color;
   background: $secondary-color;
 }
 
-.p-button.p-button-success:enabled:hover {
+.p-button-secondary.p-button:enabled:hover {
   background: $secondary-dark-color;
   border-color: $secondary-dark-color;
 }
 
-.p-button.p-button-success:enabled:focus {
-  box-shadow: none;
+// SUCCESS
+
+.p-button.p-button-success {
+  border: 1px solid #09b82f;
+  background: #09b82f;
+}
+
+.p-button.p-button-success:enabled:hover {
+  background: #07a323;
+  border-color: #07a323;
 }
 
 .p-tree {

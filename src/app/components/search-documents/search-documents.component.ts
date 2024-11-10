@@ -29,8 +29,8 @@ export class SearchDocumentsComponent implements OnInit {
   }
 
   onSelect(selectedNodeEntry: SearchResultEntry) {
-    this.selectedItem = null;
     this.documentService.getNodeWithParents(String(selectedNodeEntry.dbId)).subscribe(selectedNode => {
+      this.clear();
       if (this.documentService.isNodeTypeDirectory(selectedNode)) {
         this.openDirectory(selectedNode.id);
       } else {

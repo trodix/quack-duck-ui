@@ -21,7 +21,7 @@ export class TreeViewComponent implements OnInit {
     });
   }
 
-  selectedNode(event: any) {
+  selectedNode(event: { originalEvent: PointerEvent, node: TreeNode }) {
     this.documentService.onSelectedNodeFromSideBar.next(event.node.data)
   }
 

@@ -1,103 +1,107 @@
-<h1>Manage authorizations</h1>
+<div class="wrapper">
 
-<h2>Assign a group</h2>
-<div class="assign-permission">
-  <form [formGroup]="assignPermissionFormGroup">
-    <div class="create-permission-fields">
-      <span>add</span>
-      <p-dropdown [options]="(usersAndRoles$ | async)!" formControlName="selectedUser" optionLabel="label" placeholder="Select a subject (user / role)"></p-dropdown>
-      <span>into</span>
-      <p-dropdown [options]="(usersAndRoles$ | async)!" formControlName="selectedRole" optionLabel="label" placeholder="Select a subject (user / role)"></p-dropdown>
-      <button pButton type="submit" label="Assign" class="p-button-primary" icon="pi pi-save" [disabled]="!assignPermissionFormGroup.valid" (click)="assignRole()"></button>
-    </div>
-  </form>
-</div>
+  <h1>Manage authorizations</h1>
 
-<h2>Add a policy</h2>
-<div class="add-policy">
-  <form [formGroup]="createPermissionFormGroup">
-    <div class="add-policy-fields">
-      <input pInputText formControlName="subjectTxt" placeholder="new role"/>
-      <span>on</span>
-      <p-dropdown [options]="(obj$ | async)!" formControlName="selectedObj" optionLabel="label" placeholder="Select an object"></p-dropdown>
-      <span>can</span>
-      <p-dropdown [options]="(actions$ | async)!" formControlName="selectedAction" optionLabel="label" placeholder="Select an action"></p-dropdown>
-      <button pButton type="submit" label="Create" class="p-button-primary" icon="pi pi-save" [disabled]="!createPermissionFormGroup.valid" (click)="addPolicy()"></button>
-    </div>
-  </form>
-</div>
-<div class="add-policy">
-  <form [formGroup]="createPermissionFormGroup">
-    <div class="add-policy-fields">
-      <p-dropdown [options]="(usersAndRoles$ | async)!" formControlName="subject" optionLabel="label" placeholder="Select a subject (user / role)"></p-dropdown>
-      <span>on</span>
-      <p-dropdown [options]="(obj$ | async)!" formControlName="selectedObj" optionLabel="label" placeholder="Select an object"></p-dropdown>
-      <span>can</span>
-      <p-dropdown [options]="(actions$ | async)!" formControlName="selectedAction" optionLabel="label" placeholder="Select an action"></p-dropdown>
-      <button pButton type="submit" label="Create" class="p-button-primary" icon="pi pi-save" [disabled]="!createPermissionFormGroup.valid" (click)="addPolicy()"></button>
-    </div>
-  </form>
-</div>
-
-<h2>List of policies</h2>
-
-<p-table [value]="(policies$ | async)!">
-  <ng-template pTemplate="header">
-    <tr>
-      <th>sub</th>
-      <th>obj</th>
-      <th>act</th>
-      <th>...</th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-policy>
-    <tr>
-      <td>{{policy.sub}}</td>
-      <td>{{policy.obj}}</td>
-      <td>{{policy.act}}</td>
-      <td><button pButton type="button" class="p-button-rounded p-button-danger p-button-text" icon="pi pi-trash" (click)="removePolicy(policy)"></button></td>
-    </tr>
-  </ng-template>
-</p-table>
-
-<h2>List of grouping policy</h2>
-<p-table [value]="(groupingPolicies$ | async)!">
-  <ng-template pTemplate="header">
-    <tr>
-      <th>user / group</th>
-      <th>role</th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-groupingPolicy>
-    <tr>
-      <td>{{groupingPolicy.group}}</td>
-      <td>{{groupingPolicy.role}}</td>
-    </tr>
-  </ng-template>
-</p-table>
-
-<h2>List of implicitly granted permissions</h2>
-<div class="list-permissions">
-  <div class="list-permissions-fields">
-    <p-dropdown [options]="(usersAndRoles$ | async)!" formControlName="subject" optionLabel="label" placeholder="Select a subject (user / role)" (onChange)="onSelectedUserOrRole($event)"></p-dropdown>
+  <h2>Assign a group</h2>
+  <div class="assign-permission">
+    <form [formGroup]="assignPermissionFormGroup">
+      <div class="create-permission-fields">
+        <span>add</span>
+        <p-dropdown [options]="(usersAndRoles$ | async)!" formControlName="selectedUser" optionLabel="label" placeholder="Select a subject (user / role)"></p-dropdown>
+        <span>into</span>
+        <p-dropdown [options]="(usersAndRoles$ | async)!" formControlName="selectedRole" optionLabel="label" placeholder="Select a subject (user / role)"></p-dropdown>
+        <button pButton type="submit" label="Assign" class="p-button-primary" icon="pi pi-save" [disabled]="!assignPermissionFormGroup.valid" (click)="assignRole()"></button>
+      </div>
+    </form>
   </div>
-</div>
 
-<p-table [value]="(permissionsForUser$ | async)!">
-  <ng-template pTemplate="header">
-    <tr>
-      <th>sub</th>
-      <th>obj</th>
-      <th>act</th>
-      <th>...</th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-authz>
-    <tr>
-      <td>{{authz.sub}}</td>
-      <td>{{authz.obj}}</td>
-      <td>{{authz.act}}</td>
-      <td><button pButton type="button" class="p-button-rounded p-button-danger p-button-text" icon="pi pi-trash" (click)="removePermissionForUser(authz)"></button></td>
-    </tr>
-  </ng-template>
-</p-table>
+  <h2>Add a policy</h2>
+  <div class="add-policy">
+    <form [formGroup]="createPermissionFormGroup">
+      <div class="add-policy-fields">
+        <input pInputText formControlName="subjectTxt" placeholder="new role"/>
+        <span>on</span>
+        <p-dropdown [options]="(obj$ | async)!" formControlName="selectedObj" optionLabel="label" placeholder="Select an object"></p-dropdown>
+        <span>can</span>
+        <p-dropdown [options]="(actions$ | async)!" formControlName="selectedAction" optionLabel="label" placeholder="Select an action"></p-dropdown>
+        <button pButton type="submit" label="Create" class="p-button-primary" icon="pi pi-save" [disabled]="!createPermissionFormGroup.valid" (click)="addPolicy()"></button>
+      </div>
+    </form>
+  </div>
+  <div class="add-policy">
+    <form [formGroup]="createPermissionFormGroup">
+      <div class="add-policy-fields">
+        <p-dropdown [options]="(usersAndRoles$ | async)!" formControlName="subject" optionLabel="label" placeholder="Select a subject (user / role)"></p-dropdown>
+        <span>on</span>
+        <p-dropdown [options]="(obj$ | async)!" formControlName="selectedObj" optionLabel="label" placeholder="Select an object"></p-dropdown>
+        <span>can</span>
+        <p-dropdown [options]="(actions$ | async)!" formControlName="selectedAction" optionLabel="label" placeholder="Select an action"></p-dropdown>
+        <button pButton type="submit" label="Create" class="p-button-primary" icon="pi pi-save" [disabled]="!createPermissionFormGroup.valid" (click)="addPolicy()"></button>
+      </div>
+    </form>
+  </div>
+
+  <h2>List of policies</h2>
+
+  <p-table [value]="(policies$ | async)!">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>sub</th>
+        <th>obj</th>
+        <th>act</th>
+        <th>...</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-policy>
+      <tr>
+        <td>{{policy.sub}}</td>
+        <td>{{policy.obj}}</td>
+        <td>{{policy.act}}</td>
+        <td><button pButton type="button" class="p-button-rounded p-button-danger p-button-text" icon="pi pi-trash" (click)="removePolicy(policy)"></button></td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <h2>List of grouping policy</h2>
+  <p-table [value]="(groupingPolicies$ | async)!">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>user / group</th>
+        <th>role</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-groupingPolicy>
+      <tr>
+        <td>{{groupingPolicy.group}}</td>
+        <td>{{groupingPolicy.role}}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <h2>List of implicitly granted permissions</h2>
+  <div class="list-permissions">
+    <div class="list-permissions-fields">
+      <p-dropdown [options]="(usersAndRoles$ | async)!" optionLabel="label" placeholder="Select a subject (user / role)" (onChange)="onSelectedUserOrRole($event)"></p-dropdown>
+    </div>
+  </div>
+
+  <p-table [value]="(permissionsForUser$ | async)!">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>sub</th>
+        <th>obj</th>
+        <th>act</th>
+        <th>...</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-authz>
+      <tr>
+        <td>{{authz.sub}}</td>
+        <td>{{authz.obj}}</td>
+        <td>{{authz.act}}</td>
+        <td><button pButton type="button" class="p-button-rounded p-button-danger p-button-text" icon="pi pi-trash" (click)="removePermissionForUser(authz)"></button></td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+</div>

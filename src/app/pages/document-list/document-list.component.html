@@ -8,15 +8,14 @@
 
       <p-toolbar>
         <div class="p-toolbar-group-start">
-          <p-button icon="pi pi-folder" (onClick)="showDialogCreateDirectory()"></p-button>
+          <p-button icon="pi pi-folder" styleClass="p-button-primary" (onClick)="showDialogCreateDirectory()"></p-button>
 
-          <p-button (onClick)="onClickMenuCreateDocument(menuCreateDocument, $event)" class="toogle-menu" icon="pi pi-file"></p-button>
+          <p-button icon="pi pi-file" styleClass="p-button-primary toogle-menu" (onClick)="onClickMenuCreateDocument(menuCreateDocument, $event)"></p-button>
           <p-menu #menuCreateDocument [popup]="true" [model]="menuItemsCreateDocument"></p-menu>
 
-          <p-button icon="pi pi-upload" styleClass="p-button-success" (onClick)="fileinput.click()"></p-button>
+          <p-button icon="pi pi-upload" styleClass="p-button-secondary" (click)="fileinput.click()"></p-button>
           <input #fileinput type="file" accept="*" (change)="onSelectedFile($event)" style="display:none">
         </div>
-
       </p-toolbar>
 
       <div class="document-list-container">
@@ -26,7 +25,6 @@
           selectionMode="multiple"
           [metaKeySelection]="true"
           [scrollable]="true"
-          scrollHeight="600px"
           [tableStyle]="{'min-width': '50rem'}"
         >
           <ng-template pTemplate="header">
@@ -107,17 +105,17 @@
       </form>
   </p-dialog>
 
-  <p-dialog *ngIf="displayModalDelete" header="Delete confirmation" [(visible)]="displayModalDelete" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">
+  <p-dialog *ngIf="displayModalDelete" header="Delete confirmation" [(visible)]="displayModalDelete" [modal]="true" [style]="{width: '500px'}" [draggable]="false" [resizable]="false" [closable]="false">
     <p>Do you confirm delete <strong>{{ editingNode!.properties | property: 'cm:name' }}</strong> ?</p>
     <div class="actions flex justify-content-end gap-2">
       <div class="right flex align-items-end gap-2">
-        <button pButton type="button" label="No, cancel" class="p-button-secondary" icon="pi pi-times" (click)="closeDialogDelete()"></button>
+        <button pButton type="button" label="No, cancel" class="p-button-primary" icon="pi pi-times" (click)="closeDialogDelete()"></button>
         <button pButton type="button" label="Yes, delete" class="p-button-danger" icon="pi pi-trash" (click)="delete()"></button>
       </div>
     </div>
   </p-dialog>
 
-  <p-dialog *ngIf="renameForm" header="Rename" [(visible)]="displayModalRename" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">
+  <p-dialog *ngIf="renameForm" header="Rename" [(visible)]="displayModalRename" [modal]="true" [style]="{width: '500px'}" [draggable]="false" [resizable]="false" [closable]="false">
       <form [formGroup]="renameForm" (ngSubmit)="rename()" class="w-full">
           <div class="flex flex-column">
               <div class="form-fields flex flex-column">
@@ -137,11 +135,11 @@
       </form>
   </p-dialog>
 
-  <p-dialog *ngIf="displayModalRestoreVersion" header="Restore a version" [(visible)]="displayModalRestoreVersion" [modal]="true" [style]="{width: '40vw'}" [draggable]="false" [resizable]="false" [closable]="false">
+  <p-dialog *ngIf="displayModalRestoreVersion" header="Restore a version" [(visible)]="displayModalRestoreVersion" [modal]="true" [style]="{width: '800px'}" [draggable]="false" [resizable]="false" [closable]="false">
     <div class="w-full">
       <div class="flex flex-column">
 
-        <p-table [value]="(selectedNodeVersions$ | async)!">
+        <p-table [value]="(selectedNodeVersions$ | async)!" style="margin-bottom: 16px">
           <ng-template pTemplate="header">
             <tr>
               <th>Version</th>
@@ -171,7 +169,7 @@
     </div>
   </p-dialog>
 
-  <p-dialog *ngIf="displayModalMove" header="Choose a destination" [(visible)]="displayModalMove" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false" [closable]="false">
+  <p-dialog *ngIf="displayModalMove" header="Choose a destination" [(visible)]="displayModalMove" [modal]="true" [style]="{width: '600px'}" [draggable]="false" [resizable]="false" [closable]="false">
       <app-tree-file-selector [actionUponNode]="editingNode!" [rootDirectoryId]="ROOT_NODE" (onSelectedDirectory)="moveDestination = $event"></app-tree-file-selector>
 
       <div class="actions flex justify-content-end gap-2">
@@ -187,7 +185,7 @@
           header="Manage permissions - {{editingNode?.type == 'cm:content' ? 'Document' : 'Directory'}} {{editingNode!.properties| property: 'cm:name'}}"
           [(visible)]="displayModalAuthorization"
           [modal]="true"
-          [style]="{width: '90vw', height: '90vh'}"
+          [style]="{width: '800px'}"
           [draggable]="false"
           [resizable]="false"
           [closable]="false">
@@ -195,7 +193,7 @@
 
       <div class="actions flex justify-content-end gap-2">
           <div class="right flex align-items-end gap-2">
-              <button pButton type="submit" label="Close" class="p-button-primary" icon="pi pi-save" (click)="closeDialogAuthorization()"></button>
+              <button pButton type="submit" label="Close" class="p-button-secondary" icon="pi pi-times" (click)="closeDialogAuthorization()"></button>
           </div>
       </div>
   </p-dialog>

@@ -163,13 +163,6 @@ export class DocumentListComponent implements OnInit {
             }
           },
           {
-            label: 'Restore a version',
-            icon: 'pi pi-arrow-right-arrow-left',
-            command: () => {
-              this.showDialogRestoreVersion(node);
-            }
-          },
-          {
             label: 'Delete',
             icon: 'pi pi-trash',
             command: () => {
@@ -191,6 +184,13 @@ export class DocumentListComponent implements OnInit {
       this.items = this.items.map(i => {
         if (i.id === "common") {
           i.items?.push(
+            {
+              label: 'Restore a version',
+              icon: 'pi pi-arrow-right-arrow-left',
+              command: () => {
+                this.showDialogRestoreVersion(node);
+              }
+            },
             {
               label: 'Open in OnlyOffice',
               icon: 'pi pi-file-edit',

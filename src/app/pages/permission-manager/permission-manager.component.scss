@@ -1,0 +1,13 @@
+@import '../../../duckcloud-theme';
+
+.wrapper {
+  background: $theme-palette-color-7;
+  border-radius: 5px;
+  padding: 16px 12px;
+  margin: 16px 0;
+  border-right: 1px solid $theme-palette-color-6;
+  box-shadow: 0 5px 20px 0 rgba(21, 27 , 38, .08);
+  padding-bottom: 150px;
+
+  //overflow: auto;
+}
